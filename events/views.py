@@ -1,0 +1,11 @@
+from django.shortcuts import render, get_object_or_404
+
+
+def event_list(request, **kwargs):
+    # TODO: implement
+    raise NotImplementedError
+
+def event_detail(request, **kwargs):
+    # TODO: implement
+    raise NotImplementedError
+

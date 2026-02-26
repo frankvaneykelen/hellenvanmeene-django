@@ -1,0 +1,158 @@
+"""
+Core app — shared reference models used as FK targets by all other apps.
+These correspond to the lookup/reference tables in the original SQL Server schema.
+"""
+
+from django.db import models
+
+
+class Country(models.Model):
+    """Maps to: Country table"""
+    label = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "Countries"
+        verbose_name_plural = "countries"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class Place(models.Model):
+    """City/town. Maps to: Place table."""
+    label = models.CharField(max_length=200)
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name="places")
+
+    class Meta:
+        db_table = "Places"
+        ordering = ["label"]
+
+    def __str__(self):
+        return f"{self.label}, {self.country}"
+
+
+class Location(models.Model):
+    """Museum, gallery, or venue. Maps to: Location table."""
+    label = models.CharField(max_length=400)
+    place = models.ForeignKey(Place, on_delete=models.PROTECT, related_name="locations")
+    address = models.CharField(max_length=500, blank=True, default="")
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    description = models.TextField(blank=True, default="")
+    link = models.URLField(max_length=500, blank=True, default="")
+
+    class Meta:
+        db_table = "Locations"
+        ordering = ["label"]
+
+    def __str__(self):
+        return f"{self.label} ({self.place})"
+
+
+class Role(models.Model):
+    """Curator, artist, author, etc. Maps to: Role table."""
+    label = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "Roles"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class Creator(models.Model):
+    """Person associated with exhibitions or publications. Maps to: Creator table."""
+    name = models.CharField(max_length=400)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="creators")
+    biography = models.TextField(blank=True, default="")
+    photo_link = models.CharField(max_length=500, blank=True, default="")
+    photo_credit = models.CharField(max_length=300, blank=True, default="")
+
+    class Meta:
+        db_table = "Creators"
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.role})"
+
+
+class Language(models.Model):
+    """Maps to: Language table."""
+    label = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "Languages"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class Editor(models.Model):
+    """Content editor / staff user label. Maps to: Editor table."""
+    label = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "Editors"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class Tag(models.Model):
+    """Shared tag used across exhibitions, events, news, pages, publications."""
+    label = models.CharField(max_length=200, unique=True)
+
+    class Meta:
+        db_table = "Tags"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class MediaType(models.Model):
+    """Maps to: MediaType table."""
+    label = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "MediaTypes"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class CollectionType(models.Model):
+    """Maps to: CollectionType table."""
+    label = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "CollectionTypes"
+        ordering = ["label"]
+
+    def __str__(self):
+        return self.label
+
+
+class Collection(models.Model):
+    """Museum/institution collection that holds works. Maps to: Collection table."""
+    name = models.CharField(max_length=400)
+    place = models.ForeignKey(
+        Place, on_delete=models.SET_NULL, null=True, blank=True, related_name="collections"
+    )
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name="collections")
+    link = models.URLField(max_length=500, blank=True, default="")
+    collection_type = models.ForeignKey(
+        CollectionType, on_delete=models.PROTECT, related_name="collections"
+    )
+
+    class Meta:
+        db_table = "Collections"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
