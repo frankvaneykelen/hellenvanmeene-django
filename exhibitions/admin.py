@@ -41,9 +41,9 @@ class ExhibitionPublicationInline(admin.TabularInline):
 class ExhibitionAdmin(admin.ModelAdmin):
     list_display = [
         "title", "location", "date_from_year", "date_from_month",
-        "exhibition_type", "show",
+        "exhibition_type", "do_not_show",
     ]
-    list_filter = ["show", "exhibition_type", "language", "date_from_year"]
+    list_filter = ["do_not_show", "exhibition_type", "language", "date_from_year"]
     search_fields = ["title", "subtitle", "foldername"]
     list_select_related = ["location", "exhibition_type", "language"]
     autocomplete_fields = ["location", "language", "editor"]
@@ -55,7 +55,7 @@ class ExhibitionAdmin(admin.ModelAdmin):
     ]
     fieldsets = [
         (None, {
-            "fields": ["title", "subtitle", "foldername", "show"]
+            "fields": ["title", "subtitle", "foldername", "do_not_show"]
         }),
         ("Dates", {
             "fields": [

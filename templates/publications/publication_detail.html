@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ publication.title }} — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>{{ publication.title }}</h1>
+{% if publication.subtitle %}<h2>{{ publication.subtitle }}</h2>{% endif %}
+<p>{{ publication.description }}</p>
+<p><a href="{% url 'publications:list' %}">← All publications</a></p>
+{% endblock %}

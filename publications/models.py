@@ -35,23 +35,26 @@ class Publication(models.Model):
     place = models.ForeignKey(
         Place, on_delete=models.SET_NULL, null=True, blank=True,
         related_name="publications",
-        help_text="City of publication"
+        help_text="City of publication",
+        db_column="PlaceId",
     )
     isbn = models.CharField(max_length=30, blank=True, default="")
     issn = models.CharField(max_length=30, blank=True, default="")
-    publication_date = models.DateField(null=True, blank=True)
-    date_year = models.IntegerField(null=True, blank=True)
-    date_month = models.IntegerField(null=True, blank=True)
+    publication_date = models.DateField(null=True, blank=True, db_column="PublicationDate")
+    date_year = models.IntegerField(null=True, blank=True, db_column="DateYear")
+    date_month = models.IntegerField(null=True, blank=True, db_column="DateMonth")
     publication_type = models.ForeignKey(
         PublicationType, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="publications"
+        related_name="publications",
+        db_column="PublicationTypeId",
     )
     publication_format = models.ForeignKey(
         PublicationFormat, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="publications"
+        related_name="publications",
+        db_column="PublicationFormatId",
     )
-    show = models.BooleanField(default=True)
-    creation_date = models.DateTimeField(null=True, blank=True)
+    do_not_show = models.BooleanField(default=False, db_column="DoNotShow")
+    creation_date = models.DateTimeField(null=True, blank=True, db_column="CreationDateTime")
 
     class Meta:
         db_table = "Publications"
@@ -63,10 +66,12 @@ class Publication(models.Model):
 
 class PublicationCreator(models.Model):
     publication = models.ForeignKey(
-        Publication, on_delete=models.CASCADE, related_name="publication_creators"
+        Publication, on_delete=models.CASCADE, related_name="publication_creators",
+        db_column="PublicationId",
     )
     creator = models.ForeignKey(
-        Creator, on_delete=models.CASCADE, related_name="publication_creators"
+        Creator, on_delete=models.CASCADE, related_name="publication_creators",
+        db_column="CreatorId",
     )
 
     class Meta:
@@ -79,9 +84,12 @@ class PublicationCreator(models.Model):
 
 class PublicationTag(models.Model):
     publication = models.ForeignKey(
-        Publication, on_delete=models.CASCADE, related_name="publication_tags"
+        Publication, on_delete=models.CASCADE, related_name="publication_tags",
+        db_column="PublicationId",
     )
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="publication_tags")
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="publication_tags",
+        db_column="TagId",
+    )
 
     class Meta:
         db_table = "PublicationTags"

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Events — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>Events</h1>
+<ul>
+{% for ev in events %}
+  <li><a href="{% url 'events:detail' ev.pk %}">{{ ev.title }}</a>{% if ev.date_from_year %} ({{ ev.date_from_year }}){% endif %}</li>
+{% empty %}
+  <li>No events available.</li>
+{% endfor %}
+</ul>
+{% endblock %}

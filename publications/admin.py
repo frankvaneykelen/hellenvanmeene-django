@@ -33,15 +33,15 @@ class PublicationTagInline(admin.TabularInline):
 class PublicationAdmin(admin.ModelAdmin):
     list_display = [
         "title", "publisher", "place", "date_year",
-        "publication_type", "show",
+        "publication_type", "do_not_show",
     ]
-    list_filter = ["show", "publication_type", "publication_format", "date_year"]
+    list_filter = ["do_not_show", "publication_type", "publication_format", "date_year"]
     search_fields = ["title", "subtitle", "publisher", "isbn", "issn", "foldername"]
     list_select_related = ["place", "publication_type"]
     autocomplete_fields = ["place"]
     inlines = [PublicationCreatorInline, PublicationTagInline]
     fieldsets = [
-        (None, {"fields": ["title", "subtitle", "foldername", "show"]}),
+        (None, {"fields": ["title", "subtitle", "foldername", "do_not_show"]}),
         ("Publisher", {"fields": ["publisher", "place", "publication_type", "publication_format"]}),
         ("Identifiers", {"fields": ["isbn", "issn", "link"]}),
         ("Date", {"fields": ["publication_date", "date_year", "date_month"]}),

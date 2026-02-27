@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Publications — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>Publications</h1>
+<ul>
+{% for pub in publications %}
+  <li><a href="{% url 'publications:detail' pub.pk %}">{{ pub.title }}</a>{% if pub.date_year %} ({{ pub.date_year }}){% endif %}</li>
+{% empty %}
+  <li>No publications available.</li>
+{% endfor %}
+</ul>
+{% endblock %}

@@ -12,20 +12,22 @@ class NewsArticle(models.Model):
     content_markdown = models.TextField(blank=True, default="")
     language = models.ForeignKey(
         Language, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="news_articles"
+        related_name="news_articles",
+        db_column="LanguageId",
     )
     editor = models.ForeignKey(
         Editor, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="news_articles"
+        related_name="news_articles",
+        db_column="CreatedByEditorId",
     )
     tags_csv = models.TextField(
         blank=True, default="",
         help_text="Legacy CSV tags", db_column="Tags"
     )
-    show = models.BooleanField(default=True)
-    creation_date = models.DateTimeField(null=True, blank=True)
-    illustration_link = models.CharField(max_length=500, blank=True, default="")
-    illustration_label = models.CharField(max_length=300, blank=True, default="")
+    do_not_show = models.BooleanField(default=False, db_column="DoNotShow")
+    creation_date = models.DateTimeField(null=True, blank=True, db_column="CreationDate")
+    illustration_link = models.CharField(max_length=500, blank=True, default="", db_column="IllustrationLink")
+    illustration_label = models.CharField(max_length=300, blank=True, default="", db_column="IllustrationLabel")
 
     class Meta:
         db_table = "NewsArticles"
@@ -38,7 +40,8 @@ class NewsArticle(models.Model):
 class NewsArticleImage(models.Model):
     """Additional images attached to a news article."""
     news_article = models.ForeignKey(
-        NewsArticle, on_delete=models.CASCADE, related_name="images"
+        NewsArticle, on_delete=models.CASCADE, related_name="images",
+        db_column="NewsArticleId",
     )
     image_link = models.CharField(max_length=500, blank=True, default="")
     caption = models.CharField(max_length=500, blank=True, default="")
@@ -54,9 +57,12 @@ class NewsArticleImage(models.Model):
 
 class NewsArticlesTag(models.Model):
     news_article = models.ForeignKey(
-        NewsArticle, on_delete=models.CASCADE, related_name="news_article_tags"
+        NewsArticle, on_delete=models.CASCADE, related_name="news_article_tags",
+        db_column="NewsArticleId",
     )
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="news_article_tags")
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="news_article_tags",
+        db_column="TagId",
+    )
 
     class Meta:
         db_table = "NewsArticlesTags"

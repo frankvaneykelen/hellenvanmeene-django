@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }} — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>{{ event.title }}</h1>
+{% if event.subtitle %}<h2>{{ event.subtitle }}</h2>{% endif %}
+<p>{{ event.description }}</p>
+<p><a href="{% url 'events:list' %}">← All events</a></p>
+{% endblock %}

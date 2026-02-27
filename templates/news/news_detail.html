@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }} — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>{{ article.title }}</h1>
+{% if article.subtitle %}<h2>{{ article.subtitle }}</h2>{% endif %}
+<p>{{ article.summary }}</p>
+<p><a href="{% url 'news:list' %}">← All news</a></p>
+{% endblock %}

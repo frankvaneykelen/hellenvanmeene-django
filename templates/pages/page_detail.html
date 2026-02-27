@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>{{ page.title }}</h1>
+{% if page.subtitle %}<h2>{{ page.subtitle }}</h2>{% endif %}
+{{ page.content_xhtml|safe }}
+{% endblock %}

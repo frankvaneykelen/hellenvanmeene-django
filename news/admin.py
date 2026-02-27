@@ -17,14 +17,14 @@ class NewsArticlesTagInline(admin.TabularInline):
 
 @admin.register(NewsArticle)
 class NewsArticleAdmin(admin.ModelAdmin):
-    list_display = ["title", "publication_datetime", "language", "show"]
-    list_filter = ["show", "language"]
+    list_display = ["title", "publication_datetime", "language", "do_not_show"]
+    list_filter = ["do_not_show", "language"]
     search_fields = ["title", "subtitle", "summary", "foldername"]
     list_select_related = ["language", "editor"]
     autocomplete_fields = ["language", "editor"]
     inlines = [NewsArticleImageInline, NewsArticlesTagInline]
     fieldsets = [
-        (None, {"fields": ["title", "subtitle", "foldername", "show"]}),
+        (None, {"fields": ["title", "subtitle", "foldername", "do_not_show"]}),
         ("Content", {"fields": ["summary", "content_markdown", "content_xhtml"]}),
         ("Media", {"fields": ["illustration_link", "illustration_label"]}),
         ("Metadata", {"fields": ["publication_datetime", "creation_date",

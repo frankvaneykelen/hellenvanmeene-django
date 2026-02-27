@@ -8,7 +8,7 @@ from django.db import models
 
 class Country(models.Model):
     """Maps to: Country table"""
-    label = models.CharField(max_length=200)
+    label = models.CharField(max_length=200, db_column="Name")
 
     class Meta:
         db_table = "Countries"
@@ -22,7 +22,7 @@ class Country(models.Model):
 class Place(models.Model):
     """City/town. Maps to: Place table."""
     label = models.CharField(max_length=200)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name="places")
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name="places", db_column="CountryId")
 
     class Meta:
         db_table = "Places"
@@ -35,7 +35,7 @@ class Place(models.Model):
 class Location(models.Model):
     """Museum, gallery, or venue. Maps to: Location table."""
     label = models.CharField(max_length=400)
-    place = models.ForeignKey(Place, on_delete=models.PROTECT, related_name="locations")
+    place = models.ForeignKey(Place, on_delete=models.PROTECT, related_name="locations", db_column="PlaceId")
     address = models.CharField(max_length=500, blank=True, default="")
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
@@ -65,10 +65,10 @@ class Role(models.Model):
 class Creator(models.Model):
     """Person associated with exhibitions or publications. Maps to: Creator table."""
     name = models.CharField(max_length=400)
-    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="creators")
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="creators", db_column="RoleId")
     biography = models.TextField(blank=True, default="")
-    photo_link = models.CharField(max_length=500, blank=True, default="")
-    photo_credit = models.CharField(max_length=300, blank=True, default="")
+    photo_link = models.CharField(max_length=500, blank=True, default="", db_column="PhotoLink")
+    photo_credit = models.CharField(max_length=300, blank=True, default="", db_column="PhotoCredit")
 
     class Meta:
         db_table = "Creators"
@@ -142,12 +142,16 @@ class Collection(models.Model):
     """Museum/institution collection that holds works. Maps to: Collection table."""
     name = models.CharField(max_length=400)
     place = models.ForeignKey(
-        Place, on_delete=models.SET_NULL, null=True, blank=True, related_name="collections"
+        Place, on_delete=models.SET_NULL, null=True, blank=True, related_name="collections",
+        db_column="PlaceId",
     )
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name="collections")
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, related_name="collections",
+        db_column="CountryId",
+    )
     link = models.URLField(max_length=500, blank=True, default="")
     collection_type = models.ForeignKey(
-        CollectionType, on_delete=models.PROTECT, related_name="collections"
+        CollectionType, on_delete=models.PROTECT, related_name="collections",
+        db_column="CollectionTypeId",
     )
 
     class Meta:

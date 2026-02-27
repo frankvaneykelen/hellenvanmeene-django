@@ -17,9 +17,10 @@ class Page(models.Model):
     parent = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="children"
+        related_name="children",
+        db_column="ParentId",
     )
-    show = models.BooleanField(default=True)
+    do_not_show = models.BooleanField(default=False, db_column="DoNotShow")
     sortorder = models.IntegerField(null=True, blank=True)
     creation_date = models.DateTimeField(null=True, blank=True)
 
@@ -32,8 +33,12 @@ class Page(models.Model):
 
 
 class PageTag(models.Model):
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="page_tags")
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="page_tags")
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="page_tags",
+        db_column="PageId",
+    )
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="page_tags",
+        db_column="TagId",
+    )
 
     class Meta:
         db_table = "PageTags"

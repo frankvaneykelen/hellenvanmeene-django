@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Photos — Hellen van Meene{% endblock %}
+
+{% block content %}
+<h1>Photos</h1>
+<ul>
+    {% for photo in photos %}
+    <li>
+        <a href="{% url 'photos:detail' photo.code %}">{{ photo.code }}</a>
+        {% if photo.year %}({{ photo.year }}){% endif %}
+    </li>
+    {% empty %}
+    <li>No photos available.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ exhibition.title }} — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>{{ exhibition.title }}</h1>
+{% if exhibition.subtitle %}<h2>{{ exhibition.subtitle }}</h2>{% endif %}
+{% if exhibition.date_from_year %}<p>{{ exhibition.date_from_year }}</p>{% endif %}
+<p>{{ exhibition.description }}</p>
+<p><a href="{% url 'exhibitions:list' %}">← All exhibitions</a></p>
+{% endblock %}

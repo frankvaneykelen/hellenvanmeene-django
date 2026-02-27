@@ -21,31 +21,35 @@ class Event(models.Model):
     link = models.URLField(max_length=500, blank=True, default="")
     location = models.ForeignKey(
         Location, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="events"
+        related_name="events",
+        db_column="LocationId",
     )
-    date_from = models.DateField(null=True, blank=True)
-    date_from_year = models.IntegerField(null=True, blank=True)
-    date_from_month = models.IntegerField(null=True, blank=True)
-    date_to = models.DateField(null=True, blank=True)
-    date_to_year = models.IntegerField(null=True, blank=True)
-    date_to_month = models.IntegerField(null=True, blank=True)
-    content_xhtml = models.TextField(blank=True, default="")
-    illustration_link = models.CharField(max_length=500, blank=True, default="")
-    illustration_label = models.CharField(max_length=300, blank=True, default="")
+    date_from = models.DateField(null=True, blank=True, db_column="DateFrom")
+    date_from_year = models.IntegerField(null=True, blank=True, db_column="DateFromYear")
+    date_from_month = models.IntegerField(null=True, blank=True, db_column="DateFromMonth")
+    date_to = models.DateField(null=True, blank=True, db_column="DateTo")
+    date_to_year = models.IntegerField(null=True, blank=True, db_column="DateToYear")
+    date_to_month = models.IntegerField(null=True, blank=True, db_column="DateToMonth")
+    content_xhtml = models.TextField(blank=True, default="", db_column="ContentXHTML")
+    illustration_link = models.CharField(max_length=500, blank=True, default="", db_column="IllustrationLink")
+    illustration_label = models.CharField(max_length=300, blank=True, default="", db_column="IllustrationLabel")
     event_type = models.ForeignKey(
         EventType, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="events"
+        related_name="events",
+        db_column="EventTypeId",
     )
     language = models.ForeignKey(
         Language, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="events"
+        related_name="events",
+        db_column="LanguageId",
     )
     editor = models.ForeignKey(
         Editor, on_delete=models.SET_NULL, null=True, blank=True,
-        related_name="events"
+        related_name="events",
+        db_column="EditorId",
     )
-    show = models.BooleanField(default=True)
-    creation_date = models.DateTimeField(null=True, blank=True)
+    do_not_show = models.BooleanField(default=False, db_column="DoNotShow")
+    creation_date = models.DateTimeField(null=True, blank=True, db_column="CreationDate")
 
     class Meta:
         db_table = "Events"
@@ -56,8 +60,12 @@ class Event(models.Model):
 
 
 class EventTag(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event_tags")
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="event_tags")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="event_tags",
+        db_column="EventId",
+    )
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="event_tags",
+        db_column="TagId",
+    )
 
     class Meta:
         db_table = "EventTags"

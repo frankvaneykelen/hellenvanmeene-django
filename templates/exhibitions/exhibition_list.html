@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Exhibitions — Hellen van Meene{% endblock %}
+{% block content %}
+<h1>Exhibitions</h1>
+<ul>
+{% for ex in exhibitions %}
+  <li><a href="{% url 'exhibitions:detail' ex.pk %}">{{ ex.title }}</a>{% if ex.date_from_year %} ({{ ex.date_from_year }}){% endif %}</li>
+{% empty %}
+  <li>No exhibitions available.</li>
+{% endfor %}
+</ul>
+{% endblock %}

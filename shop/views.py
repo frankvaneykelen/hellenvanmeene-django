@@ -1,7 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 
 
-def product_list(request, **kwargs):
-    # TODO: implement
-    raise NotImplementedError
+def product_list(request):
+    return render(request, "shop/product_list.html", {})
 

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}{{ photo.code }} — Hellen van Meene{% endblock %}
+
+{% block content %}
+<h1>{{ photo.code }}</h1>
+{% if photo.year %}<p>Year: {{ photo.year }}</p>{% endif %}
+{% if photo.cloud_link %}<p><img src="{{ photo.cloud_link }}" alt="{{ photo.code }}"></p>{% endif %}
+{% if photo.tag_list %}<p>Tags: {{ photo.tag_list|join:", " }}</p>{% endif %}
+<p><a href="{% url 'photos:list' %}">← Back to photos</a></p>
+{% endblock %}
