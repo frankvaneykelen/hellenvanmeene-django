@@ -3,16 +3,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
+from core.views import blob_autocomplete
 
 urlpatterns = [
     path("favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)),
+    path("admin/blob-autocomplete/", blob_autocomplete, name="blob-autocomplete"),
     path("admin/", admin.site.urls),
-    path("", include("photos.urls")),
     path("exhibitions/", include("exhibitions.urls")),
     path("events/", include("events.urls")),
     path("news/", include("news.urls")),
     path("publications/", include("publications.urls")),
     path("shop/", include("shop.urls")),
+    path("", include("photos.urls")),
     path("", include("pages.urls")),
 ]
 

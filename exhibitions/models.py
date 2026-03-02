@@ -103,10 +103,10 @@ class ExhibitionMedia(models.Model):
         Photo, on_delete=models.CASCADE, related_name="exhibition_media",
         null=True, blank=True, db_column="MediumId"
     )
-    medium_type = models.CharField(max_length=100, blank=True, default="")
-    caption = models.CharField(max_length=500, blank=True, default="")
-    indexed = models.BooleanField(null=True, blank=True)
-    sortorder = models.BigIntegerField(null=True, blank=True)
+    medium_type = models.CharField(max_length=100, blank=True, default="", db_column="MediumType")
+    caption = models.CharField(max_length=500, blank=True, default="", db_column="Caption")
+    indexed = models.BooleanField(null=True, blank=True, db_column="Indexed")
+    sortorder = models.BigIntegerField(null=True, blank=True, db_column="Sortorder")
 
     class Meta:
         db_table = "ExhibitionMedia"

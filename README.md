@@ -2,6 +2,18 @@
 
 Django 5.2 rewrite of [hellenvanmeene.com](https://hellenvanmeene.com) — a photographer's portfolio and archive site.
 
+## TL;DR;
+
+```
+PS C:\git\hellenvanmeene-django> python -m venv .venv
+
+PS C:\git\hellenvanmeene-django> .venv\Scripts\activate
+
+(.venv) PS C:\git\hellenvanmeene-django> python manage.py runserver
+
+http://localhost:8000/admin/
+```
+
 ## Tech stack
 
 | Layer | Choice |
@@ -101,6 +113,55 @@ requirements/
 infra/                # Terraform — Azure Linux App Service
 .github/workflows/    # GitHub Actions CI/CD
 ```
+
+---
+
+## Frontend template — Color Admin v5.5.2
+
+The public-facing site uses the **Color Admin v5.5.2** commercial Bootstrap theme.
+The compiled CSS, JS, and webfonts are committed to this repo under `static/` so the
+site works without any extra build step. The raw template source (Sass, unminified JS,
+PSD files, etc.) is **not** committed — it is `.gitignore`d — because it is a
+paid asset.
+
+**Purchase / download link:**
+https://wrapmarket.com/item/color-admin-admin-template-frontend-WB0N89JMK
+
+### Setting up the template on a fresh clone
+
+If you have just cloned this repo on a new laptop and the pre-built assets are already
+present in `static/css/e-commerce/`, `static/js/e-commerce/`, and `static/css/webfonts/`
+you do **not** need to do anything — skip this section.
+
+If for any reason the `static/` assets are missing (e.g. you are starting from the
+source zip), follow these steps:
+
+1. **Purchase** the template at the link above and download the zip.
+2. **Extract** the zip. You will find a folder called `frontend/` inside the archive.
+3. **Copy the pre-built assets** into this repo:
+
+```powershell
+# Replace <COLOR_ADMIN_ROOT> with the path where you extracted the zip.
+$src = "<COLOR_ADMIN_ROOT>\frontend\template\e-commerce"
+$repo = "C:\git\hellenvanmeene-django"
+
+# CSS
+Copy-Item "$src\assets\css\vendor.min.css"  "$repo\static\css\e-commerce\vendor.min.css" -Force
+Copy-Item "$src\assets\css\app.min.css"     "$repo\static\css\e-commerce\app.min.css"    -Force
+
+# Webfonts referenced by vendor.min.css via "../webfonts/"
+Copy-Item "$src\assets\css\webfonts\*"      "$repo\static\css\webfonts\" -Force
+
+# JS
+Copy-Item "$src\assets\js\vendor.min.js"   "$repo\static\js\e-commerce\vendor.min.js"  -Force
+Copy-Item "$src\assets\js\app.min.js"      "$repo\static\js\e-commerce\app.min.js"     -Force
+```
+
+4. Run `python manage.py collectstatic` as usual for deployment.
+
+> The raw source lives at `web-templates-and-design-assets/color_admin_v5.5.2/`
+> (relative to the repo root) if you place the extracted zip there. That path is
+> in `.gitignore` and will never be committed.
 
 ---
 

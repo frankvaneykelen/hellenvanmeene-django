@@ -4,7 +4,7 @@
 <h1>Events</h1>
 <ul>
 {% for ev in events %}
-  <li><a href="{% url 'events:detail' ev.pk %}">{{ ev.title }}</a>{% if ev.date_from_year %} ({{ ev.date_from_year }}){% endif %}</li>
+  <li><a href="{% url 'events:detail' ev.foldername %}">{{ ev.title }}</a>{% if ev.date_from_year %} ({{ ev.date_from_year }}){% endif %}</li>
 {% empty %}
   <li>No events available.</li>
 {% endfor %}

@@ -5,6 +5,6 @@ app_name = "exhibitions"
 
 urlpatterns = [
     path("", views.exhibition_list, name="list"),
-    path("<int:pk>/", views.exhibition_detail, name="detail"),
+    path("<slug:foldername>/", views.exhibition_detail, name="detail"),
 ]
 

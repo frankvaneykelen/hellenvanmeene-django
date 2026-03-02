@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load shop_filters %}
+{% block title %}{{ product.title }} — Shop — Hellen van Meene{% endblock %}
+
+{% block page_header %}
+<div id="page-header" class="section-container page-header-container bg-dark">
+	<div class="container">
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="/">Home</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'shop:list' %}">Shop</a></li>
+			{% if product.product_type %}
+			<li class="breadcrumb-item">
+				<a href="{% url 'shop:list' %}?type={{ product.product_type.label }}">{{ product.product_type.label }}</a>
+			</li>
+			{% endif %}
+			<li class="breadcrumb-item active">{{ product.title }}</li>
+		</ul>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="product">
+	<div class="product-detail">
+
+		<!-- image -->
+		<div class="product-image">
+			<div class="product-main-image" data-id="main-image">
+				{% if product.image_url %}
+				<img src="{{ product.image_url }}" alt="{{ product.title }}" />
+				{% else %}
+				<div class="d-flex align-items-center justify-content-center bg-gray-200" style="height:400px;">
+					<i class="fa fa-image fa-5x text-muted"></i>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+
+		<!-- info -->
+		<div class="product-info">
+			<div class="product-info-header">
+				<h1 class="product-title">{{ product.title }}</h1>
+				{% if product.product_type %}
+				<ul class="product-category">
+					<li>
+						<a href="{% url 'shop:list' %}?type={{ product.product_type.label }}">
+							{{ product.product_type.label }}
+						</a>
+					</li>
+				</ul>
+				{% endif %}
+			</div>
+
+			{% if product.description %}
+			<div class="product-warranty">
+				{{ product.description|markdownify }}
+			</div>
+			{% endif %}
+
+			<div class="product-purchase-container">
+				{% if product.price %}
+				<div class="product-price">
+					<div class="price">
+						{{ product.currency.symbol|default:"" }}{{ product.price }}
+						{% if product.currency %}<small class="text-muted ms-1">{{ product.currency.code }}</small>{% endif %}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if product.shop_link %}
+				<a href="{{ product.shop_link }}" target="_blank" rel="noopener"
+				   class="btn btn-dark btn-theme btn-lg">
+					Buy at {{ product.shop_link|shop_name }}
+					<i class="fa fa-external-link-alt ms-2"></i>
+				</a>
+				{% endif %}
+			</div>
+
+			<p class="mt-4">
+				<a href="{% url 'shop:list' %}" class="text-muted">
+					<i class="fa fa-angle-left me-1"></i> Back to shop
+				</a>
+			</p>
+		</div>
+
+	</div>
+</div>
+{% endblock %}

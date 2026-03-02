@@ -1,8 +1,29 @@
+from django import forms
 from django.contrib import admin
+from core.widgets import EasyMDEWidget
 from .models import (
     PublicationType, PublicationFormat, Publication,
     PublicationCreator, PublicationTag,
 )
+
+
+class PublicationForm(forms.ModelForm):
+    class Meta:
+        model = Publication
+        fields = "__all__"
+        widgets = {
+            "description": EasyMDEWidget,
+        }
+
+    def clean_foldername(self):
+        foldername = self.cleaned_data.get("foldername", "")
+        if foldername:
+            qs = Publication.objects.filter(foldername=foldername)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("A publication with this foldername already exists.")
+        return foldername
 
 
 @admin.register(PublicationType)
@@ -31,6 +52,11 @@ class PublicationTagInline(admin.TabularInline):
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
+    form = PublicationForm
+    save_as = True
+
+    class Media:
+        js = ("js/admin-slugify.js",)
     list_display = [
         "title", "publisher", "place", "date_year",
         "publication_type", "do_not_show",

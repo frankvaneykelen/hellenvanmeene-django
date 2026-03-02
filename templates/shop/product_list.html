@@ -1,6 +1,79 @@
 {% extends "base.html" %}
+{% load shop_filters %}
+
 {% block title %}Shop — Hellen van Meene{% endblock %}
-{% block content %}
-<h1>Shop</h1>
-<p>Coming soon.</p>
+
+{% block page_header %}
+<div id="page-header" class="section-container page-header-container bg-dark">
+	<div class="container">
+		<h1 class="page-header">Shop</h1>
+	</div>
+</div>
 {% endblock %}
+
+{% block content %}
+<div class="search-container">
+
+	{% if types %}
+	<!-- BEGIN search-sidebar -->
+	<div class="search-sidebar">
+		<h4 class="title">Filter by type</h4>
+		<ul class="search-category-list">
+			<li {% if not active_type %}class="active"{% endif %}>
+				<a href="?">All</a>
+			</li>
+			{% for t in types %}
+			<li {% if active_type == t.label %}class="active"{% endif %}>
+				<a href="?type={{ t.label }}">{{ t.label }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<!-- END search-sidebar -->
+	{% endif %}
+
+	<!-- BEGIN search-content -->
+	<div class="search-content">
+		{% if products %}
+		<div class="row gx-3 gy-4">
+			{% for p in products %}
+			<div class="col-sm-6 col-md-4">
+				<div class="item item-thumbnail h-100">
+					<a href="{% url 'shop:detail' p.pk %}" class="item-image">
+						{% if p.image_url %}
+						<img src="{{ p.image_url }}" alt="{{ p.title }}" />
+						{% else %}
+						<div class="d-flex align-items-center justify-content-center bg-gray-200" style="height:200px;">
+							<i class="fa fa-image fa-3x text-muted"></i>
+						</div>
+						{% endif %}
+					</a>
+					<div class="item-info">
+						<h4 class="item-title">
+							<a href="{% url 'shop:detail' p.pk %}">{{ p.title }}</a>
+						</h4>
+						{% if p.product_type %}
+						<p class="item-desc">{{ p.product_type.label }}</p>
+						{% endif %}
+						{% if p.price %}
+						<div class="item-price">{{ p.currency.symbol|default:"" }}{{ p.price }}</div>
+						{% endif %}
+						{% if p.shop_link %}
+						<a href="{{ p.shop_link }}" target="_blank" rel="noopener" class="btn btn-sm btn-dark btn-theme mt-2">
+							Buy at {{ p.shop_link|shop_name }}
+						</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p class="text-muted pt-4">No products available yet.</p>
+		{% endif %}
+	</div>
+	<!-- END search-content -->
+
+</div>
+{% endblock %}
+

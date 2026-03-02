@@ -1,12 +1,101 @@
 {% extends "base.html" %}
 {% block title %}Publications — Hellen van Meene{% endblock %}
+
+{% block page_header %}
+<div id="page-header" class="section-container page-header-container bg-dark">
+	<div class="container">
+		<h1 class="page-header">Publications</h1>
+	</div>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1>Publications</h1>
-<ul>
-{% for pub in publications %}
-  <li><a href="{% url 'publications:detail' pub.pk %}">{{ pub.title }}</a>{% if pub.date_year %} ({{ pub.date_year }}){% endif %}</li>
-{% empty %}
-  <li>No publications available.</li>
-{% endfor %}
-</ul>
+<div class="search-container">
+
+	<!-- BEGIN search-sidebar -->
+	<div class="search-sidebar">
+		{% if types %}
+		<h4 class="title">Type</h4>
+		<ul class="search-category-list">
+			<li {% if not active_type %}class="active"{% endif %}>
+				<a href="?">All types</a>
+			</li>
+			{% for t in types %}
+			<li {% if active_type == t.label %}class="active"{% endif %}>
+				<a href="?type={{ t.label }}{% if active_year %}&year={{ active_year }}{% endif %}">{{ t.label }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+
+		{% if years %}
+		<h4 class="title mt-4">Year</h4>
+		<ul class="search-category-list">
+			<li {% if not active_year %}class="active"{% endif %}>
+				<a href="?{% if active_type %}type={{ active_type }}{% endif %}">All years</a>
+			</li>
+			{% for y in years %}
+			<li {% if active_year == y|stringformat:'s' %}class="active"{% endif %}>
+				<a href="?{% if active_type %}type={{ active_type }}&{% endif %}year={{ y }}">{{ y }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	<!-- END search-sidebar -->
+
+	<!-- BEGIN search-content -->
+	<div class="search-content">
+		{% if publications %}
+		<div class="row gx-3 gy-4">
+			{% for pub in publications %}
+			<div class="col-sm-6 col-lg-4">
+				<div class="card h-100 border-0 shadow-sm">
+					<div class="card-body d-flex flex-column">
+						<div class="mb-1">
+							{% if pub.publication_type %}
+							<span class="badge bg-dark text-white fw-normal mb-2">{{ pub.publication_type }}</span>
+							{% endif %}
+						</div>
+						<h5 class="card-title mb-1">
+							<a href="{% url 'publications:detail' pub.foldername %}" class="text-dark text-decoration-none">
+								{{ pub.title }}
+							</a>
+						</h5>
+						{% if pub.subtitle %}
+						<p class="text-muted mb-2 fs-12px">{{ pub.subtitle }}</p>
+						{% endif %}
+						{% with creators=pub.publication_creators.all %}
+						{% if creators %}
+						<p class="mb-2 fs-12px">{% for pc in creators %}{{ pc.creator }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+						{% endif %}
+						{% endwith %}
+						<p class="text-muted fs-12px mt-auto mb-0">
+							{% if pub.publisher %}{{ pub.publisher }}{% endif %}
+							{% if pub.place %}, {{ pub.place }}{% endif %}
+							{% if pub.date_year %}, {{ pub.date_year }}{% endif %}
+						</p>
+						{% if pub.isbn %}
+						<p class="text-muted fs-12px mb-0">ISBN {{ pub.isbn }}</p>
+						{% endif %}
+					</div>
+					{% if pub.link %}
+					<div class="card-footer bg-transparent border-0 pt-0">
+						<a href="{{ pub.link }}" target="_blank" rel="noopener"
+						   class="btn btn-sm btn-dark btn-theme">
+							More info <i class="fa fa-external-link-alt ms-1"></i>
+						</a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		{% else %}
+		<p class="text-muted pt-4">No publications found.</p>
+		{% endif %}
+	</div>
+	<!-- END search-content -->
+
+</div>
 {% endblock %}

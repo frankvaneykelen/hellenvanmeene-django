@@ -4,6 +4,7 @@ from .models import Photo
 
 @admin.register(Photo)
 class PhotoAdmin(admin.ModelAdmin):
+    save_as = True
     list_display = ["code", "year", "public", "show", "greatest_hits"]
     list_filter = ["public", "show", "greatest_hits", "year"]
     search_fields = ["code", "tags_csv", "notes_markdown"]

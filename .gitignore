@@ -45,8 +45,13 @@ secrets.*.config
 *.DS_Store
 Thumbs.db
 
+# Commercial template source — do not commit (license)
+web-templates-and-design-assets/
+
 # Test / coverage
 .coverage
 htmlcov/
 .pytest_cache/
 .tox/
+WB0N89JMK.zip
+WB0N89JMK/

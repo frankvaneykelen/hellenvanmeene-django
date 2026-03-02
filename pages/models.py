@@ -7,13 +7,12 @@ class Page(models.Model):
     Self-referential tree: a page can have a parent page.
     Mirrors the ParentId FK in the original schema.
     """
-    guid = models.CharField(max_length=36, blank=True, default="")
-    foldername = models.CharField(max_length=200, blank=True, default="")
-    title = models.CharField(max_length=400)
-    subtitle = models.CharField(max_length=400, blank=True, default="")
-    menu_title = models.CharField(max_length=200, blank=True, default="")
-    content_xhtml = models.TextField(blank=True, default="")
-    content_markdown = models.TextField(blank=True, default="")
+    guid = models.CharField(max_length=36, blank=True, default="", db_column="Guid")
+    foldername = models.CharField(max_length=200, blank=True, default="", db_column="Foldername")
+    title = models.CharField(max_length=400, db_column="Title")
+    subtitle = models.CharField(max_length=400, blank=True, default="", db_column="Subtitle")
+    menu_title = models.CharField(max_length=200, blank=True, default="", db_column="MenuTitle")
+    content_xhtml = models.TextField(blank=True, default="", db_column="ContentXHTML")
     parent = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL, null=True, blank=True,
@@ -21,12 +20,11 @@ class Page(models.Model):
         db_column="ParentId",
     )
     do_not_show = models.BooleanField(default=False, db_column="DoNotShow")
-    sortorder = models.IntegerField(null=True, blank=True)
-    creation_date = models.DateTimeField(null=True, blank=True)
+    creation_date = models.DateTimeField(null=True, blank=True, db_column="CreationDate")
 
     class Meta:
         db_table = "Pages"
-        ordering = ["sortorder", "title"]
+        ordering = ["title"]
 
     def __str__(self):
         return self.title

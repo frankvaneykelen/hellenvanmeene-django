@@ -1,5 +1,26 @@
+from django import forms
 from django.contrib import admin
+from core.widgets import EasyMDEWidget
 from .models import EventType, Event, EventTag
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = "__all__"
+        widgets = {
+            "description": EasyMDEWidget,
+        }
+
+    def clean_foldername(self):
+        foldername = self.cleaned_data.get("foldername", "")
+        if foldername:
+            qs = Event.objects.filter(foldername=foldername)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("An event with this foldername already exists.")
+        return foldername
 
 
 @admin.register(EventType)
@@ -16,6 +37,11 @@ class EventTagInline(admin.TabularInline):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
+    form = EventForm
+    save_as = True
+
+    class Media:
+        js = ("js/admin-slugify.js",)
     list_display = [
         "title", "location", "date_from_year", "date_from_month",
         "event_type", "do_not_show",

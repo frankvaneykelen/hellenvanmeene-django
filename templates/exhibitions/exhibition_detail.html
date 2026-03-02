@@ -1,9 +1,189 @@
 {% extends "base.html" %}
+{% load shop_filters %}
 {% block title %}{{ exhibition.title }} — Hellen van Meene{% endblock %}
 {% block content %}
-<h1>{{ exhibition.title }}</h1>
-{% if exhibition.subtitle %}<h2>{{ exhibition.subtitle }}</h2>{% endif %}
-{% if exhibition.date_from_year %}<p>{{ exhibition.date_from_year }}</p>{% endif %}
-<p>{{ exhibition.description }}</p>
-<p><a href="{% url 'exhibitions:list' %}">← All exhibitions</a></p>
+
+<div class="container py-4">
+
+  <!-- Back link -->
+  <p class="mb-3"><a href="{% url 'exhibitions:list' %}">← All exhibitions</a></p>
+
+  <!-- Title block -->
+  <h1 class="mb-1">{{ exhibition.title }}</h1>
+  {% if exhibition.subtitle %}<h2 class="h4 text-muted mb-3">{{ exhibition.subtitle }}</h2>{% endif %}
+
+  <!-- Meta row: type · dates · location -->
+  <div class="d-flex flex-wrap gap-3 mb-4 text-muted small">
+
+    {% if exhibition.exhibition_type %}
+    <span class="badge bg-secondary">{{ exhibition.exhibition_type }}</span>
+    {% endif %}
+
+      {% if exhibition.date_from or exhibition.date_from_year %}
+    <span>
+      <strong>Dates:</strong>
+      {% if exhibition.date_from %}
+        {{ exhibition.date_from|date:"j N Y" }}
+      {% elif exhibition.date_from_month %}
+        {{ exhibition.date_from_month|month_name }} {{ exhibition.date_from_year }}
+      {% else %}
+        {{ exhibition.date_from_year }}
+      {% endif %}
+      {% if exhibition.date_to or exhibition.date_to_year %}
+        &ndash;
+        {% if exhibition.date_to %}
+          {{ exhibition.date_to|date:"j N Y" }}
+        {% elif exhibition.date_to_month %}
+          {{ exhibition.date_to_month|month_name }} {{ exhibition.date_to_year }}
+        {% else %}
+          {{ exhibition.date_to_year }}
+        {% endif %}
+      {% endif %}
+    </span>
+    {% endif %}
+
+    {% if exhibition.location %}
+    <span>
+      <strong>Venue:</strong>
+      {% if exhibition.location.link %}
+        <a href="{{ exhibition.location.link }}" target="_blank" rel="noopener">{{ exhibition.location.label }}</a>
+      {% else %}
+        {{ exhibition.location.label }}
+      {% endif %}
+      {% if exhibition.location.place %}, {{ exhibition.location.place }}{% endif %}
+    </span>
+    {% endif %}
+
+    {% if exhibition.language %}
+    <span><strong>Language:</strong> {{ exhibition.language }}</span>
+    {% endif %}
+
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+
+      <!-- External link -->
+      {% if exhibition.link %}
+      <p><a href="{{ exhibition.link }}" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">Visit exhibition website ↗</a></p>
+      {% endif %}
+
+      <!-- Description (markdown) -->
+      {% if exhibition.description %}
+      <div class="mb-4">{{ exhibition.description|markdownify }}</div>
+      {% endif %}
+
+      <!-- Legacy XHTML content -->
+      {% if exhibition.content_xhtml %}
+      <div class="mb-4">{{ exhibition.content_xhtml|safe }}</div>
+      {% endif %}
+
+      <!-- Curators / creators -->
+      {% with creators=exhibition.exhibition_creators.all %}
+      {% if creators %}
+      <section class="mb-4">
+        <h3 class="h5 mb-3">People</h3>
+        <div class="row g-3">
+          {% for ec in creators %}
+          <div class="col-sm-6">
+            <div class="card h-100 border-0 bg-light">
+              <div class="card-body py-2 px-3">
+                <p class="mb-0 fw-semibold">{{ ec.creator.name }}</p>
+                {% if ec.creator.role %}<p class="mb-0 small text-muted">{{ ec.creator.role }}</p>{% endif %}
+                {% if ec.creator.biography %}<p class="mb-0 small mt-1">{{ ec.creator.biography|truncatewords:30 }}</p>{% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% endwith %}
+
+      <!-- Related publications -->
+      {% with pubs=exhibition.exhibition_publications.all %}
+      {% if pubs %}
+      <section class="mb-4">
+        <h3 class="h5 mb-3">Publications</h3>
+        <ul class="list-unstyled">
+          {% for ep in pubs %}
+          <li class="mb-1">
+            {% if ep.publication.foldername %}
+              <a href="{% url 'publications:detail' ep.publication.foldername %}">{{ ep.publication.title }}</a>
+            {% else %}
+              {{ ep.publication.title }}
+            {% endif %}
+            {% if ep.publication.link %}
+              <a href="{{ ep.publication.link }}" class="ms-1 small text-muted" target="_blank" rel="noopener">[↗]</a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+      {% endwith %}
+
+    </div><!-- /col-lg-8 -->
+
+    <div class="col-lg-4">
+
+      <!-- Illustration -->
+      {% if exhibition.illustration_link %}
+      <figure class="mb-3">
+        <img src="{{ exhibition.illustration_link }}" alt="{{ exhibition.illustration_label|default:exhibition.title }}" class="img-fluid rounded">
+        {% if exhibition.illustration_label %}<figcaption class="small text-muted mt-1">{{ exhibition.illustration_label }}</figcaption>{% endif %}
+      </figure>
+      {% endif %}
+
+      <!-- Location detail card -->
+      {% if exhibition.location and exhibition.location.address %}
+      <div class="card border-0 bg-light mb-3">
+        <div class="card-body py-2 px-3 small">
+          <p class="mb-1 fw-semibold">{{ exhibition.location.label }}</p>
+          <p class="mb-0 text-muted">{{ exhibition.location.address }}</p>
+          {% if exhibition.location.place %}<p class="mb-0 text-muted">{{ exhibition.location.place }}</p>{% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Tags -->
+      {% with tags=exhibition.exhibition_tags.all %}
+      {% if tags %}
+      <div class="mb-3">
+        <h3 class="h6 mb-2">Tags</h3>
+        {% for et in tags %}
+        <span class="badge bg-light text-dark border me-1 mb-1">{{ et.tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+    </div><!-- /col-lg-4 -->
+  </div><!-- /row -->
+
+  <!-- Exhibition photos / media gallery -->
+  {% with media=exhibition.exhibition_media.all %}
+  {% if media %}
+  <section class="mt-2 mb-4">
+    <h3 class="h5 mb-3">Works in this exhibition</h3>
+    <div class="row g-3">
+      {% for em in media %}
+      {% if em.photo and em.photo.cloud_link %}
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <figure class="m-0">
+          <a href="{% url 'photos:detail' em.photo.code %}">
+            <img src="{{ em.photo.cloud_link }}" alt="{{ em.photo.code }}" class="img-fluid rounded" loading="lazy">
+          </a>
+          {% if em.caption %}<figcaption class="small text-muted mt-1">{{ em.caption }}</figcaption>{% endif %}
+        </figure>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+  {% endwith %}
+
+</div><!-- /container -->
+
 {% endblock %}

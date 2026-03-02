@@ -7,7 +7,7 @@ def news_list(request):
     return render(request, "news/news_list.html", {"articles": articles})
 
 
-def news_detail(request, pk):
-    article = get_object_or_404(NewsArticle, pk=pk)
+def news_detail(request, foldername):
+    article = get_object_or_404(NewsArticle, foldername=foldername)
     return render(request, "news/news_detail.html", {"article": article})
 

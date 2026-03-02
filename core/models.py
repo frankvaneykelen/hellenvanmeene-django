@@ -19,6 +19,21 @@ class Country(models.Model):
         return self.label
 
 
+class Currency(models.Model):
+    """ISO currency. Maps to: Currencies table."""
+    code   = models.CharField(max_length=3, unique=True)   # EUR, USD, …
+    symbol = models.CharField(max_length=4)                # €, $, £, ¥
+    name   = models.CharField(max_length=100)              # Euro, US Dollar, …
+
+    class Meta:
+        db_table = "Currencies"
+        ordering = ["code"]
+        verbose_name_plural = "currencies"
+
+    def __str__(self):
+        return f"{self.symbol} {self.code}"
+
+
 class Place(models.Model):
     """City/town. Maps to: Place table."""
     label = models.CharField(max_length=200)
@@ -92,7 +107,7 @@ class Language(models.Model):
 
 class Editor(models.Model):
     """Content editor / staff user label. Maps to: Editor table."""
-    label = models.CharField(max_length=200)
+    label = models.CharField(max_length=200, db_column="Name")
 
     class Meta:
         db_table = "Editors"
@@ -116,7 +131,7 @@ class Tag(models.Model):
 
 class MediaType(models.Model):
     """Maps to: MediaType table."""
-    label = models.CharField(max_length=200)
+    label = models.CharField(max_length=200, db_column="Name")
 
     class Meta:
         db_table = "MediaTypes"
@@ -136,6 +151,42 @@ class CollectionType(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class AzureStorageBlob(models.Model):
+    """Blob asset registry. Maps to: AzureStorageBlobs table."""
+    guid = models.CharField(max_length=36, db_column="Guid")
+    container = models.CharField(max_length=250, blank=True, default="", db_column="Container")
+    key = models.TextField(blank=True, default="", db_column="Key")
+    created = models.DateTimeField(null=True, blank=True, db_column="Created")
+    last_modified = models.DateTimeField(null=True, blank=True, db_column="LastModified")
+    meta_modified = models.DateTimeField(null=True, blank=True, db_column="MetaModified")
+    uri = models.TextField(blank=True, default="", db_column="Uri")
+    filename = models.CharField(max_length=500, blank=True, default="", db_column="FileName")
+    length = models.BigIntegerField(null=True, blank=True, db_column="Length")
+    horizontal_resolution = models.FloatField(null=True, blank=True, db_column="HorizontalResolution")
+    vertical_resolution = models.FloatField(null=True, blank=True, db_column="VerticalResolution")
+    height = models.BigIntegerField(null=True, blank=True, db_column="Height")
+    width = models.BigIntegerField(null=True, blank=True, db_column="Width")
+    content_type = models.CharField(max_length=250, blank=True, default="", db_column="ContentType")
+    media_type = models.ForeignKey(
+        MediaType, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="blobs", db_column="MediaTypeId",
+    )
+    created_by_editor = models.ForeignKey(
+        Editor, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="created_blobs", db_column="CreatedByEditorId",
+    )
+    last_modified_by_editor = models.ForeignKey(
+        Editor, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="modified_blobs", db_column="LastModifiedByEditorId",
+    )
+
+    class Meta:
+        db_table = "AzureStorageBlobs"
+
+    def __str__(self):
+        return self.filename or self.guid
 
 
 class Collection(models.Model):

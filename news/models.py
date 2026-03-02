@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Tag, Language, Editor
+from core.models import AzureStorageBlob, Tag, Language, Editor
 
 
 class NewsArticle(models.Model):
@@ -7,9 +7,9 @@ class NewsArticle(models.Model):
     title = models.CharField(max_length=400)
     subtitle = models.CharField(max_length=400, blank=True, default="")
     summary = models.TextField(blank=True, default="")
-    publication_datetime = models.DateTimeField(null=True, blank=True)
-    content_xhtml = models.TextField(blank=True, default="")
-    content_markdown = models.TextField(blank=True, default="")
+    publication_datetime = models.DateTimeField(null=True, blank=True, db_column="PublicationDateTime")
+    content_xhtml = models.TextField(blank=True, default="", db_column="ContentXHTML")
+    content_markdown = models.TextField(blank=True, default="", db_column="ContentMarkdown")
     language = models.ForeignKey(
         Language, on_delete=models.SET_NULL, null=True, blank=True,
         related_name="news_articles",
@@ -43,16 +43,20 @@ class NewsArticleImage(models.Model):
         NewsArticle, on_delete=models.CASCADE, related_name="images",
         db_column="NewsArticleId",
     )
-    image_link = models.CharField(max_length=500, blank=True, default="")
-    caption = models.CharField(max_length=500, blank=True, default="")
-    sortorder = models.IntegerField(null=True, blank=True)
+    azure_storage_blob = models.ForeignKey(
+        AzureStorageBlob, on_delete=models.PROTECT,
+        related_name="news_article_images", db_column="AzureStorageBlobId",
+    )
+    caption = models.CharField(max_length=500, blank=True, default="", db_column="Caption")
+    sortorder = models.BigIntegerField(null=True, blank=True, db_column="Sortorder")
+    use_as_article_image = models.BooleanField(default=False, db_column="UseAsArticleImage")
 
     class Meta:
         db_table = "NewsArticleImages"
         ordering = ["sortorder"]
 
     def __str__(self):
-        return self.image_link
+        return str(self.azure_storage_blob)
 
 
 class NewsArticlesTag(models.Model):

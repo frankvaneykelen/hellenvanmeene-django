@@ -1,8 +1,85 @@
 {% extends "base.html" %}
-{% block title %}{{ publication.title }} — Hellen van Meene{% endblock %}
+{% load shop_filters %}
+{% block title %}{{ publication.title }} — Publications — Hellen van Meene{% endblock %}
+
+{% block page_header %}
+<div id="page-header" class="section-container page-header-container bg-dark">
+	<div class="container">
+		<ul class="breadcrumb">
+			<li class="breadcrumb-item"><a href="/">Home</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'publications:list' %}">Publications</a></li>
+			{% if publication.publication_type %}
+			<li class="breadcrumb-item">
+				<a href="{% url 'publications:list' %}?type={{ publication.publication_type }}">{{ publication.publication_type }}</a>
+			</li>
+			{% endif %}
+			<li class="breadcrumb-item active">{{ publication.title }}</li>
+		</ul>
+	</div>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1>{{ publication.title }}</h1>
-{% if publication.subtitle %}<h2>{{ publication.subtitle }}</h2>{% endif %}
-<p>{{ publication.description }}</p>
-<p><a href="{% url 'publications:list' %}">← All publications</a></p>
+<div class="row">
+	<div class="col-lg-8">
+
+		<h1 class="mb-1">{{ publication.title }}</h1>
+		{% if publication.subtitle %}
+		<h4 class="text-muted fw-normal mb-3">{{ publication.subtitle }}</h4>
+		{% endif %}
+
+		{% with creators=publication.publication_creators.all %}
+		{% if creators %}
+		<p class="mb-3">
+			{% for pc in creators %}
+			<span class="me-3">{{ pc.creator }}</span>
+			{% endfor %}
+		</p>
+		{% endif %}
+		{% endwith %}
+
+		{% if publication.description %}
+		<div class="mb-4">
+			{{ publication.description|markdownify }}
+		</div>
+		{% endif %}
+
+	</div>
+	<div class="col-lg-4">
+		<table class="table table-sm table-borderless">
+			{% if publication.publisher %}
+			<tr><th class="text-muted fw-normal ps-0">Publisher</th><td>{{ publication.publisher }}</td></tr>
+			{% endif %}
+			{% if publication.place %}
+			<tr><th class="text-muted fw-normal ps-0">Place</th><td>{{ publication.place }}</td></tr>
+			{% endif %}
+			{% if publication.date_year %}
+			<tr><th class="text-muted fw-normal ps-0">Year</th><td>{{ publication.date_year }}</td></tr>
+			{% endif %}
+			{% if publication.publication_type %}
+			<tr><th class="text-muted fw-normal ps-0">Type</th><td>{{ publication.publication_type }}</td></tr>
+			{% endif %}
+			{% if publication.publication_format %}
+			<tr><th class="text-muted fw-normal ps-0">Format</th><td>{{ publication.publication_format }}</td></tr>
+			{% endif %}
+			{% if publication.isbn %}
+			<tr><th class="text-muted fw-normal ps-0">ISBN</th><td>{{ publication.isbn }}</td></tr>
+			{% endif %}
+			{% if publication.issn %}
+			<tr><th class="text-muted fw-normal ps-0">ISSN</th><td>{{ publication.issn }}</td></tr>
+			{% endif %}
+		</table>
+		{% if publication.link %}
+		<a href="{{ publication.link }}" target="_blank" rel="noopener"
+		   class="btn btn-dark btn-theme btn-lg d-block">
+			More info <i class="fa fa-external-link-alt ms-2"></i>
+		</a>
+		{% endif %}
+	</div>
+</div>
+<p class="mt-4">
+	<a href="{% url 'publications:list' %}" class="text-muted">
+		<i class="fa fa-angle-left me-1"></i> Back to publications
+	</a>
+</p>
 {% endblock %}

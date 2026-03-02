@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+{% load shop_filters %}
 {% block title %}{{ article.title }} — Hellen van Meene{% endblock %}
 {% block content %}
 <h1>{{ article.title }}</h1>
 {% if article.subtitle %}<h2>{{ article.subtitle }}</h2>{% endif %}
-<p>{{ article.summary }}</p>
+{% if article.summary %}<p class="lead">{{ article.summary }}</p>{% endif %}
+{% if article.content_markdown %}<div>{{ article.content_markdown|markdownify }}</div>{% endif %}
 <p><a href="{% url 'news:list' %}">← All news</a></p>
 {% endblock %}

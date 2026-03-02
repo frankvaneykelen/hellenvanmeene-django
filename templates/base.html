@@ -1,16 +1,83 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Hellen van Meene{% endblock %}</title>
+	<meta charset="utf-8" />
+	<title>{% block title %}Hellen van Meene{% endblock %}</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<link href="{% static 'css/e-commerce/vendor.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'css/e-commerce/app.min.css' %}" rel="stylesheet" />
+	{% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav>
-        <a href="/">Photos</a>
-    </nav>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+<!-- BEGIN #app -->
+<div id="app" class="fade show">
+
+	<!-- BEGIN #header -->
+	<div id="header" class="header">
+		<div class="container">
+			<div class="header-container">
+				<button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<div class="header-logo">
+					<a href="/">
+						<span class="brand-text">Hellen van Meene</span>
+					</a>
+				</div>
+				<div class="header-nav">
+					<div class="collapse navbar-collapse" id="navbar-collapse">
+						<ul class="nav justify-content-center">
+							<li {% if request.path == '/' %}class="active"{% endif %}>
+								<a href="/">Works</a>
+							</li>
+							<li {% if '/exhibitions/' in request.path %}class="active"{% endif %}>
+								<a href="/exhibitions/">Exhibitions</a>
+							</li>
+							<li {% if '/news/' in request.path %}class="active"{% endif %}>
+								<a href="/news/">News</a>
+							</li>
+							<li {% if '/publications/' in request.path %}class="active"{% endif %}>
+								<a href="/publications/">Publications</a>
+							</li>
+							<li {% if '/shop/' in request.path %}class="active"{% endif %}>
+								<a href="/shop/">Shop</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END #header -->
+
+	{% block page_header %}{% endblock %}
+
+	<!-- BEGIN #content -->
+	<div id="content" class="section-container">
+		<div class="container">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+	<!-- END #content -->
+
+	<!-- BEGIN #footer-copyright -->
+	<div id="footer-copyright" class="footer-copyright">
+		<div class="container">
+			<div class="copyright">
+				&copy; Hellen van Meene
+			</div>
+		</div>
+	</div>
+	<!-- END #footer-copyright -->
+
+</div>
+<!-- END #app -->
+
+<script src="{% static 'js/e-commerce/vendor.min.js' %}"></script>
+<script src="{% static 'js/e-commerce/app.min.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

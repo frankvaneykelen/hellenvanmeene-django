@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     # Third-party
     "imagekit",
     "storages",
+    # Third-party continued
     # Project apps
     "core",
     "photos",
@@ -138,6 +139,22 @@ ANYMAIL = {
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@hellenvanmeene.com")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# ---------------------------------------------------------------------------
+# Migrations
+# ---------------------------------------------------------------------------
+# Legacy apps map to pre-existing tables; tell Django never to generate or
+# apply migrations for them so their models are always taken from the current
+# Python state rather than from a migration history that doesn't exist.
+MIGRATION_MODULES = {
+    "core": None,
+    "photos": None,
+    "exhibitions": None,
+    "events": None,
+    "news": None,
+    "pages": None,
+    "publications": None,
+}
 
 # ---------------------------------------------------------------------------
 # Miscellaneous
