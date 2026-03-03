@@ -1,37 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Links — Hellen van Meene{% endblock %}
 
-{% block content %}
-
-<div class="section-header">
+{% block page_header %}
+<div class="links-page-header">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1 class="animated slideInLeft"><span>Links for @hellenvanmeene</span></h1>
-            </div>
-        </div>
+        <p class="links-page-label">Link in Bio</p>
+        <h1 class="links-page-title">@hellenvanmeene</h1>
+        <p class="links-page-sub">Photography — selected links &amp; resources</p>
     </div>
 </div>
+{% endblock %}
 
-<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
-    <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-9 col-sm-12">
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
 
+        <div class="links-timeline">
             {% for link in links %}
-            <div class="link-in-bio-item">
-                <h4 class="link-in-bio-title">
-                    <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
-                </h4>
-                {% if link.description %}
-                <p class="link-in-bio-description">{{ link.description }}</p>
-                {% endif %}
+            <div class="links-timeline-item">
+                <div class="links-timeline-node">
+                    <span class="links-timeline-index">{{ forloop.revcounter }}</span>
+                </div>
+                <div class="links-timeline-body">
+                    <h4 class="links-timeline-title">
+                        <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">
+                            {{ link.label }}<i class="fa fa-external-link links-timeline-ext" aria-hidden="true"></i>
+                        </a>
+                    </h4>
+                    {% if link.description %}
+                    <p class="links-timeline-description">{{ link.description }}</p>
+                    {% endif %}
+                </div>
             </div>
             {% empty %}
             <p>No links available.</p>
             {% endfor %}
-
         </div>
+
     </div>
 </div>
-
 {% endblock %}

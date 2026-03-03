@@ -187,6 +187,30 @@
         </div>
         {% endif %}
 
+        {# ── Links ───────────────────────────────────────────────── #}
+        {% if results.links %}
+        <div class="search-section mb-4">
+          <div class="search-section-header">Links <span class="count">{{ results.links.count }}</span></div>
+          <ul class="search-result-list">
+            {% for obj in results.links %}
+            <li>
+              <div class="search-result-icon">
+                <i class="fa fa-link"></i>
+              </div>
+              <div class="search-result-info">
+                <h4 class="title"><a href="{{ obj.url }}" target="_blank" rel="noopener noreferrer">{{ obj.label }}</a></h4>
+                {% if obj.description %}<p class="subtitle">{{ obj.description }}</p>{% endif %}
+              </div>
+              <div class="search-result-meta">
+                <div class="year"></div>
+                <div class="type">LINK</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
       {% endif %}{# results.total == 0 #}
     {% endif %}{# q #}
 
@@ -225,6 +249,12 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <span><i class="fa fa-file-text-o me-2 text-muted"></i>Pages</span>
           <span class="badge bg-secondary rounded-pill">{{ results.pages.count }}</span>
+        </li>
+        {% endif %}
+        {% if results.links %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-link me-2 text-muted"></i>Links</span>
+          <span class="badge bg-secondary rounded-pill">{{ results.links.count }}</span>
         </li>
         {% endif %}
         {% if not results %}

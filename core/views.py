@@ -60,7 +60,14 @@ def search(request):
             Q(title__icontains=q) | Q(subtitle__icontains=q)
         ).only("title", "subtitle", "foldername")
 
-        section_keys = ("exhibitions", "events", "news", "publications", "pages")
+        from links.models import Link
+        results["links"] = Link.objects.filter(
+            do_not_show=False
+        ).filter(
+            Q(label__icontains=q) | Q(description__icontains=q) | Q(url__icontains=q)
+        ).only("label", "url", "description")
+
+        section_keys = ("exhibitions", "events", "news", "publications", "pages", "links")
         results["total"] = sum(results[k].count() for k in section_keys)
 
     return render(request, "search_results.html", {"q": q, "results": results})
