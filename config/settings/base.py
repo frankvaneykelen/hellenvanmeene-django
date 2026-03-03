@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "pages",
     "publications",
     "shop",
+    "galleries",
+    "links",
 ]
 
 MIDDLEWARE = [

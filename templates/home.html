@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Hellen van Meene{% endblock %}
+{% block content %}
+
+<div class="py-5 text-center">
+  <h1 class="mb-4">Hellen van Meene</h1>
+  <p><a href="/photos/" class="btn btn-outline-secondary">Photos</a></p>
+</div>
+
+{% if galleries %}
+<div class="border-top pt-4 mb-5">
+  <h2 class="h5 mb-4">Galleries representing Hellen van Meene</h2>
+  <div class="row g-3">
+    {% for gallery in galleries %}
+    <div class="col-6 col-md-3">
+      <div class="d-flex flex-column align-items-center text-center gap-2">
+        {% if gallery.image_link %}
+        <a href="{% url 'galleries:list' %}#{{ gallery.slug }}">
+          <img
+            src="{{ gallery.image_link }}{% if '?' not in gallery.image_link %}?width=200{% endif %}"
+            alt="{{ gallery.image_alt|default:gallery.name }}"
+            class="img-fluid mb-1"
+            style="max-height:130px;width:auto;object-fit:contain;"
+          >
+        </a>
+        {% endif %}
+        <div>
+          <a href="{% url 'galleries:list' %}#{{ gallery.slug }}" class="fw-semibold text-dark text-decoration-none">
+            {{ gallery.name }}
+          </a>
+          <div class="small text-muted">{{ gallery.place.label }}, {{ gallery.place.country }}</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

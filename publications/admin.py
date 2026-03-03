@@ -3,7 +3,7 @@ from django.contrib import admin
 from core.widgets import EasyMDEWidget
 from .models import (
     PublicationType, PublicationFormat, Publication,
-    PublicationCreator, PublicationTag,
+    PublicationCreator, PublicationTag, PublicationMedia,
 )
 
 
@@ -50,6 +50,14 @@ class PublicationTagInline(admin.TabularInline):
     autocomplete_fields = ["tag"]
 
 
+class PublicationMediaInline(admin.TabularInline):
+    model = PublicationMedia
+    extra = 1
+    autocomplete_fields = ["medium"]
+    fields = ["medium", "medium_type", "caption", "sortorder", "indexed"]
+    ordering = ["sortorder"]
+
+
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
     form = PublicationForm
@@ -65,7 +73,7 @@ class PublicationAdmin(admin.ModelAdmin):
     search_fields = ["title", "subtitle", "publisher", "isbn", "issn", "foldername"]
     list_select_related = ["place", "publication_type"]
     autocomplete_fields = ["place"]
-    inlines = [PublicationCreatorInline, PublicationTagInline]
+    inlines = [PublicationCreatorInline, PublicationTagInline, PublicationMediaInline]
     fieldsets = [
         (None, {"fields": ["title", "subtitle", "foldername", "do_not_show"]}),
         ("Publisher", {"fields": ["publisher", "place", "publication_type", "publication_format"]}),

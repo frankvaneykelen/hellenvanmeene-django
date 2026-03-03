@@ -189,6 +189,47 @@ class AzureStorageBlob(models.Model):
         return self.filename or self.guid
 
 
+class Medium(models.Model):
+    """File asset (image, video, document). Maps to pre-existing Media table."""
+    guid = models.CharField(max_length=36, db_column="Guid")
+    path = models.CharField(max_length=500, blank=True, null=True, db_column="Path")
+    name = models.CharField(max_length=60, blank=True, null=True, db_column="Name")
+    media_type = models.ForeignKey(
+        MediaType, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="media", db_column="MediaTypeId",
+    )
+    content_length = models.BigIntegerField(null=True, blank=True, db_column="ContentLength")
+    content_type = models.CharField(max_length=250, blank=True, null=True, db_column="ContentType")
+    file_name = models.CharField(max_length=250, blank=True, null=True, db_column="FileName")
+    extension = models.CharField(max_length=250, blank=True, null=True, db_column="Extension")
+    created_datetime = models.DateTimeField(null=True, blank=True, db_column="CreatedDateTime")
+    last_modified_datetime = models.DateTimeField(null=True, blank=True, db_column="LastModifiedDateTime")
+    horizontal_resolution = models.FloatField(null=True, blank=True, db_column="HorizontalResolution")
+    vertical_resolution = models.FloatField(null=True, blank=True, db_column="VerticalResolution")
+    height = models.BigIntegerField(null=True, blank=True, db_column="Height")
+    width = models.BigIntegerField(null=True, blank=True, db_column="Width")
+    is_resized_version_of_medium_id = models.BigIntegerField(
+        null=True, blank=True, db_column="IsResizedVersionOfMediumId"
+    )
+    created_by_editor = models.ForeignKey(
+        Editor, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="created_media", db_column="CreatedByEditorId",
+    )
+    last_modified_by_editor = models.ForeignKey(
+        Editor, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="modified_media", db_column="LastModifiedByEditorId",
+    )
+
+    class Meta:
+        db_table = "Media"
+        managed = False  # Table already exists in the database
+        ordering = ["name", "file_name"]
+        verbose_name_plural = "media"
+
+    def __str__(self):
+        return self.name or self.file_name or self.guid
+
+
 class Collection(models.Model):
     """Museum/institution collection that holds works. Maps to: Collection table."""
     name = models.CharField(max_length=400)

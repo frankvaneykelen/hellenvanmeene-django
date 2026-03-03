@@ -14,7 +14,10 @@ urlpatterns = [
     path("news/", include("news.urls")),
     path("publications/", include("publications.urls")),
     path("shop/", include("shop.urls")),
-    path("", include("photos.urls")),
+    path("photos/", include("photos.urls")),
+    path("galleries/", include("galleries.urls")),
+    path("links/", include("links.urls")),
+    path("", include("core.urls")),
     path("", include("pages.urls")),
 ]
 

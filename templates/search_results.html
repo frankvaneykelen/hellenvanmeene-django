@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% if q %} — "{{ q }}"{% endif %}{% endblock %}
+
+{# ── Page title banner (mirrors forum page-title has-bg) ────────────────────── #}
+{% block page_header %}
+<div class="search-page-title">
+  <div class="container">
+    <ul class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active">Search</li>
+    </ul>
+    <h1>
+      {% if q %}Results for <em>{{ q }}</em>{% else %}Search{% endif %}
+    </h1>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  {# ── Main results column (9) ──────────────────────────────────────── #}
+  <div class="col-lg-9">
+
+    {# Re-search bar #}
+    <form method="get" action="{% url 'core:search' %}" class="mb-4">
+      <div class="input-group">
+        <input type="search" name="q" value="{{ q }}" class="form-control"
+               placeholder="Search exhibitions, news, publications…" autofocus>
+        <button type="submit" class="btn btn-dark px-4">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    </form>
+
+    {% if q %}
+
+      {% if results.total == 0 %}
+        <div class="card text-center py-5 border-0 bg-light">
+          <p class="mb-1 fs-5">No results for <strong>"{{ q }}"</strong></p>
+          <p class="text-muted small">Try a different keyword.</p>
+        </div>
+
+      {% else %}
+
+        {# ── Helper macro: renders one result section ──────────────── #}
+        {# We repeat the block pattern per content type. #}
+
+        {# ── Exhibitions ──────────────────────────────────────────── #}
+        {% if results.exhibitions %}
+        <div class="search-section mb-4">
+          <div class="search-section-header">Exhibitions <span class="count">{{ results.exhibitions.count }}</span></div>
+          <ul class="search-result-list">
+            {% for obj in results.exhibitions %}
+            <li>
+              <div class="search-result-icon">
+                <i class="fa fa-image"></i>
+              </div>
+              <div class="search-result-info">
+                <h4 class="title">
+                  {% if obj.foldername %}
+                  <a href="{% url 'exhibitions:detail' obj.foldername %}">{{ obj.title }}</a>
+                  {% else %}{{ obj.title }}{% endif %}
+                </h4>
+                {% if obj.subtitle %}<p class="subtitle">{{ obj.subtitle }}</p>{% endif %}
+              </div>
+              <div class="search-result-meta">
+                <div class="year">{{ obj.date_from_year|default:"" }}</div>
+                <div class="type">EXHIBITION</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {# ── Events ───────────────────────────────────────────────── #}
+        {% if results.events %}
+        <div class="search-section mb-4">
+          <div class="search-section-header">Events <span class="count">{{ results.events.count }}</span></div>
+          <ul class="search-result-list">
+            {% for obj in results.events %}
+            <li>
+              <div class="search-result-icon">
+                <i class="fa fa-calendar"></i>
+              </div>
+              <div class="search-result-info">
+                <h4 class="title">
+                  {% if obj.foldername %}
+                  <a href="{% url 'events:detail' obj.foldername %}">{{ obj.title }}</a>
+                  {% else %}{{ obj.title }}{% endif %}
+                </h4>
+                {% if obj.subtitle %}<p class="subtitle">{{ obj.subtitle }}</p>{% endif %}
+              </div>
+              <div class="search-result-meta">
+                <div class="year">{{ obj.date_from_year|default:"" }}</div>
+                <div class="type">EVENT</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {# ── News ─────────────────────────────────────────────────── #}
+        {% if results.news %}
+        <div class="search-section mb-4">
+          <div class="search-section-header">News <span class="count">{{ results.news.count }}</span></div>
+          <ul class="search-result-list">
+            {% for obj in results.news %}
+            <li>
+              <div class="search-result-icon">
+                <i class="fa fa-newspaper-o"></i>
+              </div>
+              <div class="search-result-info">
+                <h4 class="title">
+                  {% if obj.foldername %}
+                  <a href="{% url 'news:detail' obj.foldername %}">{{ obj.title }}</a>
+                  {% else %}{{ obj.title }}{% endif %}
+                </h4>
+                {% if obj.subtitle %}<p class="subtitle">{{ obj.subtitle }}</p>{% endif %}
+              </div>
+              <div class="search-result-meta">
+                <div class="year">{{ obj.publication_datetime|date:"Y"|default:"" }}</div>
+                <div class="type">NEWS</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {# ── Publications ─────────────────────────────────────────── #}
+        {% if results.publications %}
+        <div class="search-section mb-4">
+          <div class="search-section-header">Publications <span class="count">{{ results.publications.count }}</span></div>
+          <ul class="search-result-list">
+            {% for obj in results.publications %}
+            <li>
+              <div class="search-result-icon">
+                <i class="fa fa-book"></i>
+              </div>
+              <div class="search-result-info">
+                <h4 class="title">
+                  {% if obj.foldername %}
+                  <a href="{% url 'publications:detail' obj.foldername %}">{{ obj.title }}</a>
+                  {% else %}{{ obj.title }}{% endif %}
+                </h4>
+                {% if obj.subtitle %}<p class="subtitle">{{ obj.subtitle }}</p>{% endif %}
+              </div>
+              <div class="search-result-meta">
+                <div class="year">{{ obj.date_year|default:"" }}</div>
+                <div class="type">PUBLICATION</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {# ── Pages ────────────────────────────────────────────────── #}
+        {% if results.pages %}
+        <div class="search-section mb-4">
+          <div class="search-section-header">Pages <span class="count">{{ results.pages.count }}</span></div>
+          <ul class="search-result-list">
+            {% for obj in results.pages %}
+            <li>
+              <div class="search-result-icon">
+                <i class="fa fa-file-text-o"></i>
+              </div>
+              <div class="search-result-info">
+                <h4 class="title">
+                  {% if obj.foldername %}
+                  <a href="{% url 'pages:detail' obj.foldername %}">{{ obj.title }}</a>
+                  {% else %}{{ obj.title }}{% endif %}
+                </h4>
+                {% if obj.subtitle %}<p class="subtitle">{{ obj.subtitle }}</p>{% endif %}
+              </div>
+              <div class="search-result-meta">
+                <div class="year"></div>
+                <div class="type">PAGE</div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+      {% endif %}{# results.total == 0 #}
+    {% endif %}{# q #}
+
+  </div>{# col-lg-9 #}
+
+  {# ── Sidebar (3) ──────────────────────────────────────────────────── #}
+  <div class="col-lg-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-bold bg-white border-bottom">Results by type</div>
+      <ul class="list-group list-group-flush">
+        {% if results.exhibitions %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-image me-2 text-muted"></i>Exhibitions</span>
+          <span class="badge bg-secondary rounded-pill">{{ results.exhibitions.count }}</span>
+        </li>
+        {% endif %}
+        {% if results.events %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-calendar me-2 text-muted"></i>Events</span>
+          <span class="badge bg-secondary rounded-pill">{{ results.events.count }}</span>
+        </li>
+        {% endif %}
+        {% if results.news %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-newspaper-o me-2 text-muted"></i>News</span>
+          <span class="badge bg-secondary rounded-pill">{{ results.news.count }}</span>
+        </li>
+        {% endif %}
+        {% if results.publications %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-book me-2 text-muted"></i>Publications</span>
+          <span class="badge bg-secondary rounded-pill">{{ results.publications.count }}</span>
+        </li>
+        {% endif %}
+        {% if results.pages %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="fa fa-file-text-o me-2 text-muted"></i>Pages</span>
+          <span class="badge bg-secondary rounded-pill">{{ results.pages.count }}</span>
+        </li>
+        {% endif %}
+        {% if not results %}
+        <li class="list-group-item text-muted">No results yet</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>{# col-lg-3 #}
+
+</div>{# row #}
+{% endblock %}

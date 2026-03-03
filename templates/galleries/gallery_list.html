@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load shop_filters %}
+
+{% block title %}Galleries — Hellen van Meene{% endblock %}
+
+{% block page_header %}
+<div class="search-page-title">
+  <div class="container">
+    <ul class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      <li class="breadcrumb-item active">Galleries</li>
+    </ul>
+    <h1>Galleries representing Hellen van Meene</h1>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% for gallery in galleries %}
+<div id="{{ gallery.slug }}" class="row gallery-entry py-4 {% if not forloop.last %}border-bottom{% endif %}">
+
+  {# Image column #}
+  <div class="col-sm-3 mb-3 mb-sm-0">
+    {% if gallery.image_link %}
+    <img
+      src="{{ gallery.image_link }}{% if '?' not in gallery.image_link %}?width=262{% endif %}"
+      alt="{{ gallery.image_alt|default:gallery.name }}"
+      class="img-fluid"
+    >
+    {% endif %}
+  </div>
+
+  {# Info column #}
+  <div class="col-sm-9">
+    <h4 class="gallery-name">{{ gallery.name }}</h4>
+    <p class="gallery-location">
+      <strong>{{ gallery.place.label }}, {{ gallery.place.country }}</strong>
+    </p>
+
+    {% if gallery.description %}
+    <div class="gallery-description">
+      {{ gallery.description|markdownify }}
+    </div>
+    {% endif %}
+
+    <p class="gallery-contact">
+      {% if gallery.website %}
+        <a href="{{ gallery.website }}" target="_blank" rel="noopener">{{ gallery.website|cut:"https://"|cut:"http://" }}</a><br>
+      {% endif %}
+      {% if gallery.phone %}{{ gallery.phone }}<br>{% endif %}
+      {% if gallery.phone2 %}{{ gallery.phone2 }}<br>{% endif %}
+    </p>
+  </div>
+
+</div>
+{% empty %}
+<p class="text-muted">No galleries listed yet.</p>
+{% endfor %}
+
+{% endblock %}

@@ -163,6 +163,29 @@ Copy-Item "$src\assets\js\app.min.js"      "$repo\static\js\e-commerce\app.min.j
 > (relative to the repo root) if you place the extracted zip there. That path is
 > in `.gitignore` and will never be committed.
 
+### Custom CSS overrides
+
+Site-specific CSS overrides are written in SCSS and kept alongside the template:
+
+| File | Purpose |
+|---|---|
+| `static/scss/hellenvanmeene-website-custom.scss` | **Source** — edit this file |
+| `static/css/hellenvanmeene-website-custom.css` | **Compiled output** — do not edit by hand |
+
+`CoreConfig.ready()` (in `core/apps.py`) compiles the SCSS to CSS automatically every
+time Django starts, using the `libsass` package. The compiled file is committed to the
+repo so that production deployments work without an explicit build step.
+
+**Workflow:**
+1. Edit `static/scss/hellenvanmeene-website-custom.scss`
+2. Save — the dev server detects the change, restarts, and recompiles the CSS
+3. Refresh the browser to see the change
+4. Commit **both** the `.scss` source and the compiled `.css`
+
+> **How it works:** `CoreConfig.ready()` hooks into Django's autoreloader via the
+> `autoreload_started` signal to register the SCSS file as a watched file. When
+> the file changes the server restarts and `_compile_scss()` runs again.
+
 ---
 
 ## Deployment

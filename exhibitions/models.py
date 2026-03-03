@@ -10,8 +10,7 @@ Exhibition
 """
 
 from django.db import models
-from core.models import Location, Creator, Tag, Language, Editor
-from photos.models import Photo
+from core.models import Location, Creator, Tag, Language, Editor, Medium
 
 
 class ExhibitionType(models.Model):
@@ -46,7 +45,7 @@ class Exhibition(models.Model):
 
     content_xhtml = models.TextField(blank=True, default="", db_column="ContentXHTML")
     illustration_link = models.CharField(max_length=500, blank=True, default="", db_column="IllustrationLink")
-    illustration_label = models.CharField(max_length=300, blank=True, default="", db_column="IllustrationLabel")
+    illustration_label = models.CharField(max_length=1250, blank=True, default="", db_column="IllustrationLabel")
     exhibition_type = models.ForeignKey(
         ExhibitionType, on_delete=models.SET_NULL, null=True, blank=True,
         related_name="exhibitions",
@@ -99,8 +98,8 @@ class ExhibitionMedia(models.Model):
         related_name="exhibition_media",
         db_column="ExhibitionId",
     )
-    photo = models.ForeignKey(
-        Photo, on_delete=models.CASCADE, related_name="exhibition_media",
+    medium = models.ForeignKey(
+        Medium, on_delete=models.CASCADE, related_name="exhibition_media",
         null=True, blank=True, db_column="MediumId"
     )
     medium_type = models.CharField(max_length=100, blank=True, default="", db_column="MediumType")
@@ -113,7 +112,7 @@ class ExhibitionMedia(models.Model):
         ordering = ["sortorder"]
 
     def __str__(self):
-        return f"{self.photo} in {self.exhibition} (#{self.sortorder})"
+        return f"{self.medium} in {self.exhibition} (#{self.sortorder})"
 
 
 class ExhibitionTag(models.Model):

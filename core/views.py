@@ -3,8 +3,67 @@ from xml.etree import ElementTree
 import requests as http_requests
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.cache import cache
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+
+
+def home(request):
+    from galleries.models import Gallery
+    galleries = (
+        Gallery.objects
+        .filter(do_not_show=False)
+        .select_related("place", "place__country")
+    )
+    return render(request, "home.html", {"galleries": galleries})
+
+
+def search(request):
+    q = request.GET.get("q", "").strip()
+    results = {}
+
+    if q:
+        from exhibitions.models import Exhibition
+        from events.models import Event
+        from news.models import NewsArticle
+        from publications.models import Publication
+        from pages.models import Page
+
+        results["exhibitions"] = Exhibition.objects.filter(
+            do_not_show=False
+        ).filter(
+            Q(title__icontains=q) | Q(subtitle__icontains=q) | Q(description__icontains=q)
+        ).only("title", "subtitle", "foldername", "date_from_year")
+
+        results["events"] = Event.objects.filter(
+            do_not_show=False
+        ).filter(
+            Q(title__icontains=q) | Q(subtitle__icontains=q) | Q(description__icontains=q)
+        ).only("title", "subtitle", "foldername", "date_from_year")
+
+        results["news"] = NewsArticle.objects.filter(
+            do_not_show=False
+        ).filter(
+            Q(title__icontains=q) | Q(subtitle__icontains=q) | Q(summary__icontains=q)
+        ).only("title", "subtitle", "foldername", "publication_datetime")
+
+        results["publications"] = Publication.objects.filter(
+            do_not_show=False
+        ).filter(
+            Q(title__icontains=q) | Q(subtitle__icontains=q)
+            | Q(description__icontains=q) | Q(publisher__icontains=q)
+        ).only("title", "subtitle", "foldername", "date_year")
+
+        results["pages"] = Page.objects.filter(
+            do_not_show=False
+        ).filter(
+            Q(title__icontains=q) | Q(subtitle__icontains=q)
+        ).only("title", "subtitle", "foldername")
+
+        section_keys = ("exhibitions", "events", "news", "publications", "pages")
+        results["total"] = sum(results[k].count() for k in section_keys)
+
+    return render(request, "search_results.html", {"q": q, "results": results})
 
 
 @staff_member_required

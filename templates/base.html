@@ -1,83 +1,262 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="utf-8" />
-	<title>{% block title %}Hellen van Meene{% endblock %}</title>
-	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-	<link href="{% static 'css/e-commerce/vendor.min.css' %}" rel="stylesheet" />
-	<link href="{% static 'css/e-commerce/app.min.css' %}" rel="stylesheet" />
-	{% block extra_css %}{% endblock %}
+    <meta charset="utf-8" />
+    <title>{% block title %}Hellen van Meene{% endblock %}</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link href="{% static 'css/e-commerce/vendor.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/e-commerce/app.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/hellenvanmeene-website-custom.css' %}" rel="stylesheet" />
+    {% block extra_css %}{% endblock %}
 </head>
+
 <body>
-<!-- BEGIN #app -->
-<div id="app" class="fade show">
+    <!-- BEGIN #app -->
+    <div id="app" class="fade show">
 
-	<!-- BEGIN #header -->
-	<div id="header" class="header">
-		<div class="container">
-			<div class="header-container">
-				<button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#navbar-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<div class="header-logo">
-					<a href="/">
-						<span class="brand-text">Hellen van Meene</span>
-					</a>
-				</div>
-				<div class="header-nav">
-					<div class="collapse navbar-collapse" id="navbar-collapse">
-						<ul class="nav justify-content-center">
-							<li {% if request.path == '/' %}class="active"{% endif %}>
-								<a href="/">Works</a>
-							</li>
-							<li {% if '/exhibitions/' in request.path %}class="active"{% endif %}>
-								<a href="/exhibitions/">Exhibitions</a>
-							</li>
-							<li {% if '/news/' in request.path %}class="active"{% endif %}>
-								<a href="/news/">News</a>
-							</li>
-							<li {% if '/publications/' in request.path %}class="active"{% endif %}>
-								<a href="/publications/">Publications</a>
-							</li>
-							<li {% if '/shop/' in request.path %}class="active"{% endif %}>
-								<a href="/shop/">Shop</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- END #header -->
+        <!-- BEGIN #header -->
+        <div id="header" class="header">
+            <div class="container">
+                <div class="header-container">
+                    <button type="button" class="navbar-toggle collapsed" data-bs-toggle="collapse"
+                        data-bs-target="#navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- BEGIN header-logo -->
+                    <div class="header-logo">
+                        <a href="/">
+                            <span class="brand-text">Hellen van Meene</span>
+                        </a>
+                    </div>
+                    <!-- END header-logo -->
+                    <!-- BEGIN header-nav (main menu) -->
+                    <div class="header-nav">
+                        <div class="collapse navbar-collapse" id="navbar-collapse">
+                            <ul class="nav justify-content-center">
+                                <li {% if '/photos/' in request.path or request.path == '/' %}class="active" {% endif %}>
+                                    <a href="/photos/">Photos</a>
+                                </li>
+                                <li {% if '/exhibitions/' in request.path %}class="active" {% endif %}>
+                                    <a href="/exhibitions/">Exhibitions</a>
+                                </li>
+                                <li {% if '/news/' in request.path %}class="active" {% endif %}>
+                                    <a href="/news/">News</a>
+                                </li>
+                                <li {% if '/publications/' in request.path %}class="active" {% endif %}>
+                                    <a href="/publications/">Publications</a>
+                                </li>
+                                <li {% if '/galleries/' in request.path %}class="active" {% endif %}>
+                                    <a href="/galleries/">Galleries</a>
+                                </li>
+                                <li {% if '/shop/' in request.path %}class="active" {% endif %}>
+                                    <a href="/shop/">Shop</a>
+                                </li>
+                                <!-- <li {% if '/links/' in request.path %}class="active" {% endif %}>
+                                    <a href="/links/">Links</a>
+                                </li> -->
 
-	{% block page_header %}{% endblock %}
+                                <!-- <li class="dropdown dropdown-hover">
+								<a href="#" data-bs-toggle="dropdown">
+									<i class="fa fa-search search-btn"></i>
+									<span class="arrow top"></span>
+								</a>
+								<div class="dropdown-menu p-15px">
+									<form action="/search/" method="GET" name="search_form">
+										<div class="input-group">
+											<input type="text" name="q" placeholder="Search" class="form-control bg-light" />
+											<button class="btn btn-dark" type="submit"><i class="fa fa-search"></i></button>
+										</div>
+									</form>
+								</div>
+							</li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- END header-nav (main menu) -->
+                    <!-- BEGIN header-nav (cart) -->
+                    <div class="header-nav">
 
-	<!-- BEGIN #content -->
-	<div id="content" class="section-container">
-		<div class="container">
-			{% block content %}{% endblock %}
-		</div>
-	</div>
-	<!-- END #content -->
+                        <ul class="nav justify-content-end">
+                            <li>
+                                <form class="navbar-form" action="/search/" method="GET" name="search_form">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="q"
+                                            placeholder="Enter Keywords..." />
+                                        <button type="submit" class="btn btn-search"><i
+                                                class="fa fa-search"></i></button>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- END header-nav (cart) -->
+                </div>
+            </div>
+        </div>
+        <!-- END #header -->
 
-	<!-- BEGIN #footer-copyright -->
-	<div id="footer-copyright" class="footer-copyright">
-		<div class="container">
-			<div class="copyright">
-				&copy; Hellen van Meene
-			</div>
-		</div>
-	</div>
-	<!-- END #footer-copyright -->
+        {% block slider %}{% endblock %}
 
-</div>
-<!-- END #app -->
+        {% block page_header %}{% endblock %}
 
-<script src="{% static 'js/e-commerce/vendor.min.js' %}"></script>
-<script src="{% static 'js/e-commerce/app.min.js' %}"></script>
-{% block extra_js %}{% endblock %}
+        <!-- BEGIN #content -->
+        <div id="content" class="section-container">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <!-- END #content -->
+
+        {% block policy %}
+        <!-- BEGIN #policy -->
+        <div id="policy" class="section-container bg-component">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 mb-4 mb-md-0">
+                        <div class="policy">
+                            <div class="policy-icon"><i class="fa fa-globe"></i></div>
+                            <div class="policy-info">
+                                <h4>International exhibitions</h4>
+                                <p>Works shown worldwide in leading museums and galleries.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 mb-4 mb-md-0">
+                        <div class="policy">
+                            <div class="policy-icon"><i class="fa fa-book"></i></div>
+                            <div class="policy-info">
+                                <h4>Monographs &amp; publications</h4>
+                                <p>A growing body of critical and artist publications.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="policy">
+                            <div class="policy-icon"><i class="fa fa-map-marker"></i></div>
+                            <div class="policy-info">
+                                <h4>Global gallery representation</h4>
+                                <p>Represented by galleries in Amsterdam, London, New York and Tokyo.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END #policy -->
+        {% endblock %}
+
+        {% block subscribe %}
+        <!-- BEGIN #subscribe -->
+        <div id="subscribe" class="section-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="subscription">
+                            <div class="subscription-intro">
+                                <h4>STAY IN TOUCH</h4>
+                                <p>Get updates on new work, exhibitions and publications.</p>
+                            </div>
+                            <div class="subscription-form">
+                                <!-- <form name="subscription_form" action="/newsletter/" method="POST">
+                                    {% csrf_token %}
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" name="email"
+                                            placeholder="Enter your email address" />
+                                        <button type="submit" class="btn btn-dark"><i
+                                                class="fa fa-angle-right"></i></button>
+                                    </div>
+                                </form> -->
+                                <script async src="https://eomail5.com/form/7035a888-1756-11f1-a3c3-b3b5c03c8fd9.js" data-form="7035a888-1756-11f1-a3c3-b3b5c03c8fd9"></script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="social">
+                            <div class="social-intro">
+                                <h4>FOLLOW</h4>
+                                <p>Keep up with new work and behind the scenes.</p>
+                            </div>
+                            <div class="social-list">
+                                <a href="https://www.instagram.com/hellenvanmeene/" target="_blank" rel="noopener"><i
+                                        class="fab fa-instagram"></i></a>
+                                <a href="https://www.facebook.com/hellenvanmeene/" target="_blank" rel="noopener"><i
+                                        class="fab fa-facebook"></i></a>
+                                <a href="https://x.com/hellenvanmeene/" target="_blank" rel="noopener"><i
+                                        class="fab fa-x-twitter"></i></a>
+
+
+                                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END #subscribe -->
+        {% endblock %}
+
+        <!-- BEGIN #footer -->
+        <div id="footer" class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h4 class="footer-header">HELLEN VAN MEENE</h4>
+                        <p>Dutch photographer born 1972 in Alkmaar. Known for her intimate, painterly portraits.</p>
+                        <p class="mb-lg-4 mb-0">Her work is held in numerous major public and private collections
+                            worldwide.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <h4 class="footer-header">EXPLORE</h4>
+                        <ul class="fa-ul mb-lg-4 mb-0 p-0">
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/photos/">Photos</a></li>
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/exhibitions/">Exhibitions</a></li>
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/news/">News</a></li>
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/publications/">Publications</a></li>
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/galleries/">Galleries</a></li>
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/shop/">Shop</a></li>
+                            <li><i class="fa fa-fw fa-angle-right"></i> <a href="/links/">Links (#linkinbio)</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 contact">
+                        <h4 class="footer-header">CONTACT HELLEN</h4>
+                        <address class="mb-lg-4 mb-0">
+                            <p>
+                                For inquiries about interviews, publications, assignments, commissions, artist talks and
+                                workshops
+                                you may contact <a href="mailto:office@hellenvanmeene.com">her office</a> directly.
+                            </p>
+                            <p>Please direct any other inquiries, including questions about sales and exhibitions, to
+                                any of her <a href="/galleries/">galleries</a>.</p>
+                            <p>Hellen van Meene is not looking for assistants or interns.</p>
+                            <abbr title="Email">Email:</abbr> <a
+                                href="mailto:office@hellenvanmeene.com">office@hellenvanmeene.com</a>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END #footer -->
+
+        <!-- BEGIN #footer-copyright -->
+        <div id="footer-copyright" class="footer-copyright">
+            <div class="container">
+                <div class="copyright">
+                    &copy; {% now "Y" %} Hellen van Meene. All rights reserved.
+                </div>
+            </div>
+        </div>
+        <!-- END #footer-copyright -->
+
+    </div>
+    <!-- END #app -->
+
+    <script src="{% static 'js/e-commerce/vendor.min.js' %}"></script>
+    <script src="{% static 'js/e-commerce/app.min.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
+
 </html>

@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Tag, Place, Creator
+from core.models import Tag, Place, Creator, Medium
 
 
 class PublicationType(models.Model):
@@ -97,4 +97,30 @@ class PublicationTag(models.Model):
 
     def __str__(self):
         return f"{self.tag} on {self.publication}"
+
+
+class PublicationMedia(models.Model):
+    """Links a Photo to a Publication with optional caption and sort order."""
+    publication = models.ForeignKey(
+        Publication, on_delete=models.CASCADE,
+        related_name="publication_media",
+        db_column="PublicationId",
+    )
+    medium = models.ForeignKey(
+        Medium, on_delete=models.CASCADE,
+        related_name="publication_media",
+        null=True, blank=True,
+        db_column="MediumId",
+    )
+    medium_type = models.CharField(max_length=100, blank=True, default="", db_column="MediumType")
+    caption = models.CharField(max_length=500, blank=True, default="", db_column="Caption")
+    indexed = models.BooleanField(null=True, blank=True, db_column="Indexed")
+    sortorder = models.BigIntegerField(null=True, blank=True, db_column="Sortorder")
+
+    class Meta:
+        db_table = "PublicationMedia"
+        ordering = ["sortorder"]
+
+    def __str__(self):
+        return f"{self.medium} in {self.publication} (#{self.sortorder})"
 

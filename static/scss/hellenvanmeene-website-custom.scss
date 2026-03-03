@@ -1,0 +1,292 @@
+// =============================================================================
+// Hellen van Meene – custom CSS overrides
+// Compiled to static/css/hellenvanmeene-website-custom.css on Django app start
+// =============================================================================
+
+$font-size-lg: 1rem !default;
+
+// Footer links – add underline for readability
+.footer .contact a {
+    text-decoration: underline;
+}
+
+.section-container .subscription {
+    align-items: normal;
+}
+
+// ── Search page ─────────────────────────────────────────────────────────────
+
+// Page-title banner (mirrors forum .page-title.has-bg without a photo bg)
+.search-page-title {
+    padding: 60px 0 30px;
+    background: #2d353c;
+    color: #fff;
+    position: relative;
+
+    & .breadcrumb {
+        background: none;
+        padding: 0;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+
+        & .breadcrumb-item,
+        & .breadcrumb-item a {
+            color: rgba(#fff, 0.65);
+        }
+
+        & .breadcrumb-item.active {
+            color: rgba(#fff, 0.9);
+        }
+    }
+
+    & h1 {
+        color: #fff;
+        font-weight: bold;
+        font-size: $font-size-lg * 2;
+        margin: 0;
+
+        & em {
+            font-style: italic;
+            color: rgba(#fff, 0.85);
+        }
+    }
+}
+
+// Result section card (mimics .card.card-forum)
+.search-section {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(#000, 0.08);
+    overflow: hidden;
+
+    // Section heading row (mimics card-header)
+    .search-section-header {
+        padding: 12px 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e8e8e8;
+
+        .count {
+            font-weight: normal;
+            color: #888;
+            margin-left: 6px;
+            font-size: 0.85em;
+        }
+    }
+}
+
+// Result list (mimics .forum-list.forum-topic-list)
+.search-result-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &>li {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 20px;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover {
+            background: #fafafa;
+        }
+    }
+}
+
+// Icon circle (mimics .media avatar)
+.search-result-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #eaeaea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 1rem;
+}
+
+// Title + subtitle (mimics .info-container .info)
+.search-result-info {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    & .title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0 0 3px;
+
+        & a {
+            color: #333;
+            text-decoration: none;
+
+            &:hover {
+                color: #000;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    & .subtitle {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #888;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+// Year + type badge (mimics .date-replies)
+.search-result-meta {
+    flex-shrink: 0;
+    text-align: center;
+    min-width: 72px;
+
+    & .year {
+        font-size: 0.85rem;
+        color: #555;
+        font-weight: 500;
+    }
+
+    & .type {
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+        color: #aaa;
+        text-transform: uppercase;
+    }
+}
+
+.header {
+
+    & .navbar-form {
+        & .form-group {
+            position: relative;
+            margin: 7px 15px;
+            min-width: 240px;
+
+            & .form-control {
+                font-size: $font-size-lg * 0.8125;
+                height: 36px;
+                background: var(--bs-light);
+                border-color: var(--bs-light);
+                border-radius: 0.75rem;
+                padding-inline-end: 45px;
+                padding-inline-start: 15px;
+
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+
+            & .btn {
+                position: absolute;
+                top: 0;
+                background: none;
+                border: none;
+                font-size: 16px;
+                inset-inline-end: 0;
+                border-radius: 0 15px 15px 0;
+
+                :dir(rtl) & {
+                    border-radius: 15px 0 0 15px;
+                }
+            }
+        }
+    }
+
+}
+
+// ── Galleries page ──────────────────────────────────────────────────────────
+
+.gallery-entry {
+    // breathing room between entries
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
+}
+
+.gallery-name {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.gallery-location {
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+.gallery-description {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #333;
+
+    p {
+        margin-bottom: 0.75rem;
+    }
+}
+
+.gallery-contact {
+    font-size: 0.875rem;
+    color: #555;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+
+    a {
+        color: #333;
+        text-decoration: underline;
+
+        &:hover {
+            color: #000;
+        }
+    }
+}
+
+// ── Link-in-Bio page ────────────────────────────────────────────────────────
+
+.link-in-bio-item {
+    border-bottom: 1px solid #e8e8e8;
+    padding: 1.25rem 0;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.link-in-bio-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.35rem;
+
+    a {
+        color: #1a1a1a;
+        text-decoration: none;
+        word-break: break-all;
+
+        &:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+    }
+}
+
+.link-in-bio-description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #444;
+    margin: 0;
+}

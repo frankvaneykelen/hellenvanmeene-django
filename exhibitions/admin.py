@@ -41,8 +41,8 @@ class ExhibitionCreatorInline(admin.TabularInline):
 class ExhibitionMediaInline(admin.TabularInline):
     model = ExhibitionMedia
     extra = 1
-    autocomplete_fields = ["photo"]
-    fields = ["photo", "medium_type", "caption", "sortorder", "indexed"]
+    autocomplete_fields = ["medium"]
+    fields = ["medium", "medium_type", "caption", "sortorder", "indexed"]
     ordering = ["sortorder"]
 
 

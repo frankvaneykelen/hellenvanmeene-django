@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     AzureStorageBlob, Collection, CollectionType, Country, Currency,
-    Creator, Editor, Language, Location, MediaType, Place, Role, Tag,
+    Creator, Editor, Language, Location, MediaType, Medium, Place, Role, Tag,
 )
 
 
@@ -83,6 +83,19 @@ class CollectionAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_filter = ["country", "collection_type"]
     list_select_related = ["place", "country", "collection_type"]
+
+
+@admin.register(Medium)
+class MediumAdmin(admin.ModelAdmin):
+    list_display = ["name", "file_name", "extension", "content_type", "width", "height"]
+    search_fields = ["name", "file_name", "path", "guid"]
+    list_filter = ["extension", "content_type"]
+    readonly_fields = [
+        "guid", "path", "name", "extension", "file_name", "content_type",
+        "content_length", "width", "height", "horizontal_resolution", "vertical_resolution",
+        "created_datetime", "last_modified_datetime",
+        "media_type", "created_by_editor", "last_modified_by_editor",
+    ]
 
 
 @admin.register(AzureStorageBlob)
