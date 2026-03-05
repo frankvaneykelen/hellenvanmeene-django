@@ -56,6 +56,9 @@ jobs:
           ALLOWED_HOSTS: "*"
           DB_ENGINE: django.db.backends.sqlite3
           DB_NAME: ":memory:"
+          DB_USER: placeholder
+          DB_PASSWORD: placeholder
+          DB_HOST: placeholder
         run: |
           python manage.py collectstatic --noinput
 
