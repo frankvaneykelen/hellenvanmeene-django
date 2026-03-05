@@ -91,8 +91,10 @@ jobs:
       # 7. Deploy to Azure App Service (Linux)
       # -----------------------------------------------------------------------
       - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          resource-group-name: hellenvanmeene-linux
-          package: deploy.zip
+        run: |
+          az webapp deploy \
+            --resource-group hellenvanmeene-linux \
+            --name ${{ env.AZURE_WEBAPP_NAME }} \
+            --src-path deploy.zip \
+            --type zip \
+            --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
