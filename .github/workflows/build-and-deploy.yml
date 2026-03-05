@@ -32,6 +32,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
+          cache-dependency-path: requirements/prod.txt
 
       # -----------------------------------------------------------------------
       # 3. Install dependencies
