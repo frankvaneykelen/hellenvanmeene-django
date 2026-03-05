@@ -11,7 +11,7 @@ from links.models import Link
 
 SEED_DATA = [
     {
-        "sortorder": 10,
+        "boost": 0,
         "label": "rps.org/hellenvanMeene",
         "url": "https://rps.org/hellenvanMeene",
         "description": (
@@ -20,7 +20,7 @@ SEED_DATA = [
         ),
     },
     {
-        "sortorder": 20,
+        "boost": 0,
         "label": '"Quickenings" exhibition at James Freeman Gallery, London',
         "url": "https://www.jamesfreemangallery.com/exhibitions/quickenings/",
         "description": (
@@ -30,7 +30,7 @@ SEED_DATA = [
         ),
     },
     {
-        "sortorder": 30,
+        "boost": 0,
         "label": "yanceyrichardson.viewingrooms.com",
         "url": (
             "https://yanceyrichardson.viewingrooms.com/viewing-room/"
@@ -39,7 +39,7 @@ SEED_DATA = [
         "description": "Yancey Richardson's Reverberation Exhibition on viewingrooms.com",
     },
     {
-        "sortorder": 40,
+        "boost": 0,
         "label": "www.welikeart.nl/product/hellen-van-meene-3",
         "url": "https://www.welikeart.nl/product/hellen-van-meene-3/",
         "description": (
@@ -48,37 +48,37 @@ SEED_DATA = [
         ),
     },
     {
-        "sortorder": 50,
+        "boost": 0,
         "label": "hellenvanmeene.com/shop",
         "url": "http://hellenvanmeene.com/shop",
         "description": "Buy her Limited Edition of #0474 in edition of 25!",
     },
     {
-        "sortorder": 60,
+        "boost": 0,
         "label": "hellenvanmeene.com",
         "url": "http://hellenvanmeene.com/",
         "description": "",
     },
     {
-        "sortorder": 70,
+        "boost": 0,
         "label": "www.galeriefontana.com",
         "url": "https://www.galeriefontana.com/",
         "description": "Galerie Fontana, Amsterdam, Netherlands",
     },
     {
-        "sortorder": 80,
+        "boost": 0,
         "label": "www.jamesfreemangallery.com",
         "url": "https://www.jamesfreemangallery.com/",
         "description": "James Freeman Gallery, London, UK",
     },
     {
-        "sortorder": 90,
+        "boost": 0,
         "label": "www.gallerykoyanagi.com",
         "url": "http://www.gallerykoyanagi.com/",
         "description": "Gallery Koyanagi, Tokyo, Japan",
     },
     {
-        "sortorder": 100,
+        "boost": 0,
         "label": "www.yanceyrichardson.com",
         "url": "http://www.yanceyrichardson.com/",
         "description": "Yancey Richardson Gallery, New York, NY, USA",
@@ -110,7 +110,7 @@ class Command(BaseCommand):
                 defaults={
                     "label": entry["label"],
                     "description": entry["description"],
-                    "sortorder": entry["sortorder"],
+                    "boost": entry["boost"],
                     "do_not_show": False,
                 },
             )

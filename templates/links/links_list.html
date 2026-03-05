@@ -26,6 +26,7 @@
                         <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">
                             {{ link.label }}<i class="fa fa-external-link links-timeline-ext" aria-hidden="true"></i>
                         </a>
+                        {% if link.is_new %}<span class="badge text-bg-warning ms-1">new</span>{% endif %}
                     </h4>
                     {% if link.description %}
                     <p class="links-timeline-description">{{ link.description }}</p>

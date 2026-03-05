@@ -30,14 +30,8 @@ mediafiles/
 # Secrets
 .env
 secrets.*.config
-*.tfvars
-!*.tfvars.example
-
-# Terraform state
-*.tfstate
-*.tfstate.*
-.terraform/
-.terraform.lock.hcl
+secrets.bicepparam
+!secrets.bicepparam.example
 
 # IDE
 .vscode/

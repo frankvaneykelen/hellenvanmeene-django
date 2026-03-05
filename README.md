@@ -26,7 +26,7 @@ http://localhost:8000/admin/
 | Images | django-imagekit + Pillow |
 | Config | python-decouple |
 | WSGI server | Gunicorn |
-| Infra | Terraform (Azure Linux App Service) |
+| Infra | Bicep (Azure Linux App Service) |
 | CI/CD | GitHub Actions + OIDC |
 
 ---
@@ -110,7 +110,7 @@ requirements/
   dev.txt             # + django-debug-toolbar
   prod.txt            # = base.txt (Gunicorn included in base)
 
-infra/                # Terraform — Azure Linux App Service
+infra/                # Bicep — Azure Linux App Service
 .github/workflows/    # GitHub Actions CI/CD
 ```
 
@@ -192,42 +192,58 @@ repo so that production deployments work without an explicit build step.
 
 ### One-time Azure setup
 
-1. Create a Linux App Service Plan (Python on Azure requires Linux):
-   ```bash
-   az appservice plan create \
-     --name frankvaneykelen-linux \
-     --resource-group frankvaneykelen-blog \
-     --is-linux \
-     --sku B1
+1. Create the OIDC federated credential for this GitHub repo:
+   ```powershell
+   az ad app federated-credential create `
+     --id 51925ea6-776e-4339-b2d6-9d8bec4436ac `
+     --parameters '{\"name\":\"hellenvanmeene-django-main\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"repo:frankvaneykelen/hellenvanmeene-django:ref:refs/heads/master\",\"audiences\":[\"api://AzureADTokenExchange\"]}'
    ```
 
-2. Create the OIDC federated credential for this new GitHub repo:
-   ```bash
-   az ad app federated-credential create \
-     --id 51925ea6-776e-4339-b2d6-9d8bec4436ac \
-     --parameters '{
-       "name": "hellenvanmeene-django-main",
-       "issuer": "https://token.actions.githubusercontent.com",
-       "subject": "repo:frankvaneykelen/hellenvanmeene-django:ref:refs/heads/main",
-       "audiences": ["api://AzureADTokenExchange"]
-     }'
-   ```
-
-3. Set GitHub secrets on the new repo:
+2. Set GitHub secrets on the new repo:
    - `AZURE_CLIENT_ID` = `51925ea6-776e-4339-b2d6-9d8bec4436ac`
    - `AZURE_TENANT_ID` = `7daaa223-9279-4a97-b3f4-253eae4093ab`
    - `AZURE_SUBSCRIPTION_ID` = `3c0a1e74-fe18-4403-ad5d-e6550f162731`
 
-### Terraform
+### Bicep
 
-```bash
-cd infra
-cp secrets.tfvars.example secrets.tfvars
-# fill in secrets.tfvars
+The `infra/bicep/` folder contains the Bicep deployment.
 
-terraform init
-terraform plan -var-file=secrets.tfvars
-terraform apply -var-file=secrets.tfvars
+**Structure:**
+
+| File | Purpose |
+|---|---|
+| `main.bicep` | App Service Plan + Web App, custom hostnames |
+| `keyvault.bicep` | KV access policy + secrets (deployed to a separate subscription) |
+| `main.bicepparam` | Non-sensitive parameter defaults — reference/documentation only |
+| `secrets.bicepparam` | All deployment values — **never commit**, gitignored |
+| `secrets.bicepparam.example` | Template — copy to `secrets.bicepparam` and fill in |
+
+> **Note:** `az` only accepts one `.bicepparam` file. Non-sensitive defaults (`location`, `appName`, etc.) are baked into `main.bicep` itself, so `secrets.bicepparam` is the only file needed at deploy time.
+
+> **Cross-subscription:** The Key Vault lives in subscription `3c0a1e74` / RG `frankvaneykelen-blog`. The app deploys into the `hellenvanmeene` RG. `keyvault.bicep` is called as a module with an explicit `scope:` so this is handled automatically.
+
+**First-time setup:**
+
+```powershell
+cd infra/bicep
+Copy-Item secrets.bicepparam.example secrets.bicepparam
+# fill in secrets.bicepparam
+```
+
+**Deploy:**
+
+```powershell
+az deployment group create `
+  --resource-group hellenvanmeene `
+  --parameters secrets.bicepparam
+```
+
+**What-if (dry run):**
+
+```powershell
+az deployment group what-if `
+  --resource-group hellenvanmeene `
+  --parameters secrets.bicepparam
 ```
 
 ### GitHub Actions
